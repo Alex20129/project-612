@@ -3,4 +3,14 @@ cmake_minimum_required(VERSION 3.0)
 PROJECT(project-612)
 SET(CMAKE_CXX_FLAGS "-Wall -O2")
 
-ADD_EXECUTABLE(${PROJECT_NAME} "project-612.hpp" "project-612.cpp")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/sqlite-3.8.7")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/tgbot-cpp/include")
+ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/sqlite-3.8.7")
+ADD_SUBDIRECTORY("${CMAKE_SOURCE_DIR}/tgbot-cpp")
+
+LINK_LIBRARIES(sqlite ssl crypto TgBot ws2_32 Crypt32 stdc++fs)
+
+ADD_EXECUTABLE(${PROJECT_NAME}
+    "project-612.cpp" "project-612.hpp"
+    "sender.cpp" "sender.hpp"
+    "tools.cpp" "tools.hpp")
