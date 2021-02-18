@@ -2,11 +2,7 @@
 #define FANN_TEST_APP_H
 
 //#include <iostream>
+#include <stdio.h>
 #include <unistd.h>
-#include <doublefann.h>
-#include <fann_cpp.h>
-
-//using namespace FANN;
-//extern neural_net *newANN;
 
 #endif // FANN_TEST_APP_H
