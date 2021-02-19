@@ -5,6 +5,9 @@
 #include <string.h>
 #include <iostream>
 #include <vector>
+#include <openssl/bio.h>
+#include <openssl/evp.h>
+
 #include "jansson.h"
 #include "sqlite3.h"
 
@@ -23,7 +26,7 @@ string base64_decode(const string &in);
 DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key);
 DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen);
 string EasyDecrypt(string password, unsigned char *masterKey);
-void aes_gcm_encrypt();
-void aes_gcm_decrypt();
+DATA_BLOB aes_gcm_encrypt();
+DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag);
 
 #endif //TOOLS_HPP

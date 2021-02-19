@@ -40,8 +40,7 @@ DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned
         unsigned char bData[bBufferLength-bTagLength];
         memcpy(bData, bBuffer, bBufferLength-bTagLength);
 
-        cAesGcm aDecryptor = new cAesGcm();
-        result aDecryptor.Decrypt(key, bIV, NULL, bData, bTag);
+        result = aes_gcm_decrypt(key, bIV, bData, bTag);
     }
     return result;
 }
@@ -59,16 +58,16 @@ DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen)
 
 string EasyDecrypt(string password, unsigned char *masterKey)
 {
+    string result;
     if(password.find("v10")==0 || password.find("v11")==0)
     {
-        return DecryptWithKey(password.data(), password.length(), masterKey);
+        result=*DecryptWithKey((unsigned char *)password.data(), password.length(), masterKey).pbData;
     }
     else
     {
-        string result;
-        result=*DPAPIDecrypt((unsigned char *)password.c_str(), password.length()).pbData;
-        return result;
+        result=*DPAPIDecrypt((unsigned char *)password.data(), password.length()).pbData;
     }
+    return result;
 }
 
 /*
@@ -84,11 +83,6 @@ string EasyDecrypt(string password, unsigned char *masterKey)
  * Simple AES GCM test program, uses the same NIST data used for the FIPS
  * self test but uses the application level EVP APIs.
  */
-#include <stdio.h>
-#include <openssl/bio.h>
-#include <openssl/evp.h>
-
-/* AES-GCM test data from NIST public test vectors */
 
 static const unsigned char gcm_key[] =
 {
@@ -126,14 +120,12 @@ static const unsigned char gcm_tag[] =
     0x98, 0xf7, 0x7e, 0x0c
 };
 
-void aes_gcm_encrypt()
+DATA_BLOB aes_gcm_encrypt()
 {
+    DATA_BLOB result;
     EVP_CIPHER_CTX *ctx;
-    int outlen, tmplen;
+    int outlen;
     unsigned char outbuf[1024];
-    cout<<"AES GCM Encrypt:"<<endl;
-    cout<<"Plaintext:"<<endl;
-    BIO_dump_fp(stdout, gcm_pt, sizeof(gcm_pt));
     ctx = EVP_CIPHER_CTX_new();
     /* Set cipher type and mode */
     EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
@@ -145,27 +137,22 @@ void aes_gcm_encrypt()
     EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
     /* Encrypt plaintext */
     EVP_EncryptUpdate(ctx, outbuf, &outlen, gcm_pt, sizeof(gcm_pt));
-    /* Output encrypted block */
-    cout<<"Ciphertext:"<<endl;
-    BIO_dump_fp(stdout, outbuf, outlen);
+    result.pbData=outbuf;
+    result.cbData=outlen;
     /* Finalise: note get no output for GCM */
     EVP_EncryptFinal_ex(ctx, outbuf, &outlen);
     /* Get tag */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, outbuf);
-    /* Output tag */
-    cout<<"Tag:"<<endl;
-    BIO_dump_fp(stdout, outbuf, 16);
     EVP_CIPHER_CTX_free(ctx);
+    return result;
 }
 
-void aes_gcm_decrypt()
+DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag)
 {
+    DATA_BLOB result;
     EVP_CIPHER_CTX *ctx;
-    int outlen, tmplen, rv;
+    int outlen, rv;
     unsigned char outbuf[1024];
-    cout<<"AES GCM Decrypt:"<<endl;
-    cout<<"Ciphertext:"<<endl;
-    BIO_dump_fp(stdout, gcm_ct, sizeof(gcm_ct));
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
@@ -177,16 +164,15 @@ void aes_gcm_decrypt()
     EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
     /* Decrypt plaintext */
     EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct));
-    /* Output decrypted block */
-    cout<<"Plaintext:"<<endl;
-    BIO_dump_fp(stdout, outbuf, outlen);
+    result.pbData=outbuf;
+    result.cbData=outlen;
     /* Set expected tag value. */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag),
-                        (void *)gcm_tag);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag), (void *)gcm_tag);
     /* Finalise: note get no output for GCM */
     rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
-    cout<<"Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!";
+    //cout<<"Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!";
     EVP_CIPHER_CTX_free(ctx);
+    return result;
 }
 
 #elif defined(__linux__)
