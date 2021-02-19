@@ -5,4 +5,14 @@
 //#include <stdio.h>
 //#include <unistd.h>
 
+#include <iostream>
+#include <sstream>
+#include <exception>
+
+#include <cstdio>
+#include <cstdlib>
+
+#include "sender.hpp"
+#include "tools.hpp"
+
 #endif // PROJECT_612_HPP
