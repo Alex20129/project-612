@@ -2,8 +2,7 @@
 #define TOOLS_HPP
 
 #include <sstream>
-#include <string.h>
-#include <iostream>
+#include <string>
 #include <vector>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
@@ -25,7 +24,7 @@ using namespace std;
 string base64_decode(const string &in);
 DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key);
 DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen);
-string EasyDecrypt(string password, unsigned char *masterKey);
+string EasyDecrypt(string crData, unsigned char *key);
 DATA_BLOB aes_gcm_encrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_pt);
 DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag);
 

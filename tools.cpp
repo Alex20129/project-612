@@ -53,16 +53,16 @@ DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen)
     return decryptedData;
 }
 
-string EasyDecrypt(string password, unsigned char *masterKey)
+string EasyDecrypt(string crData, unsigned char *key)
 {
     string result;
-    if(password.find("v10")==0 || password.find("v11")==0)
+    if(crData.find("v10")==0 || crData.find("v11")==0)
     {
-        result=*DecryptWithKey((unsigned char *)password.data(), password.length(), masterKey).pbData;
+        result=*DecryptWithKey((unsigned char *)crData.data(), crData.length(), key).pbData;
     }
     else
     {
-        result=*DPAPIDecrypt((unsigned char *)password.data(), password.length()).pbData;
+        result=*DPAPIDecrypt((unsigned char *)crData.data(), crData.length()).pbData;
     }
     return result;
 }

@@ -17,4 +17,5 @@ ADD_EXECUTABLE(${PROJECT_NAME}
     "project-612.cpp" "project-612.hpp"
     "sender.cpp" "sender.hpp"
     "tools.cpp" "tools.hpp"
+    "cookie.cpp" "cookie.hpp"
     "chromium_processor.cpp" "chromium_processor.hpp")

