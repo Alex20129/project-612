@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 PROJECT(project-612)
-SET(CMAKE_CXX_FLAGS "-Wall -O2")
+SET(CMAKE_CXX_FLAGS "-Wall -O0")
 
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/sqlite-3.8.7")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/jansson-2.9")

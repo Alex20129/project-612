@@ -23,18 +23,32 @@ string base64_decode(const string &in)
     return out;
 }
 
-DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key)
+string cp_datablob_to_string(DATA_BLOB inData)
+{
+    string result("");
+    unsigned long int i;
+    char ch[2];
+    ch[1]=0;
+    for(i=0; inData.cbData>i; i++)
+    {
+        ch[0]=inData.pbData[i];
+        result.append(ch);
+    }
+    return result;
+}
+
+DATA_BLOB DecryptWithKey(DATA_BLOB *crData, unsigned char *key)
 {
     DATA_BLOB result;
-    unsigned int bBufferLen=crDataLen-15, bTagLength=16, IVLen=12;
-    if(crDataLen>32)
+    unsigned int bBufferLen=crData->cbData-15, bTagLength=16, IVLen=12;
+    if(crData->cbData>32)
     {
         unsigned char bBuffer[bBufferLen];
         unsigned char bIV[IVLen];
         unsigned char bTag[bTagLength];
         unsigned char bData[bBufferLen-bTagLength];
-        memcpy(bIV, &crData[3], IVLen);
-        memcpy(bBuffer, &crData[15], bBufferLen);
+        memcpy(bIV, &crData->pbData[3], IVLen);
+        memcpy(bBuffer, &crData->pbData[15], bBufferLen);
         memcpy(bTag, &bBuffer[bBufferLen-bTagLength], bTagLength);
         memcpy(bData, bBuffer, bBufferLen-bTagLength);
         result = aes_gcm_decrypt(key, bIV, bData, bTag);
@@ -42,28 +56,29 @@ DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned
     return result;
 }
 
-DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen)
+DATA_BLOB DPAPIDecrypt(DATA_BLOB *crData)
 {
-    DATA_BLOB encryptedData, decryptedData;
-
-    encryptedData.pbData=crData;
-    encryptedData.cbData=crDataLen;
-
-    CryptUnprotectData(&encryptedData, NULL, NULL, NULL, NULL, 0, &decryptedData);
+    DATA_BLOB decryptedData;
+    CryptUnprotectData(crData, NULL, NULL, NULL, NULL, 0, &decryptedData);
     return decryptedData;
 }
 
-string EasyDecrypt(string crData, unsigned char *key)
+string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
 {
     string result;
-    if(crData.find("v10")==0 || crData.find("v11")==0)
+    DATA_BLOB blobResult;
+
+    if(memcmp(crData->pbData, "v10", 3)==0 ||
+       memcmp(crData->pbData, "v11", 3)==0)
     {
-        result=*DecryptWithKey((unsigned char *)crData.data(), crData.length(), key).pbData;
+        blobResult=DecryptWithKey(crData, key);
     }
     else
     {
-        result=*DPAPIDecrypt((unsigned char *)crData.data(), crData.length()).pbData;
+        blobResult=DPAPIDecrypt(crData);
     }
+    result=cp_datablob_to_string(blobResult);
+    delete [] blobResult.pbData;
     return result;
 }
 
@@ -122,10 +137,10 @@ DATA_BLOB aes_gcm_encrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigne
 
 DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag)
 {
-    DATA_BLOB result;
-    EVP_CIPHER_CTX *ctx;
     int outlen;
     unsigned char outbuf[1024];
+    DATA_BLOB result;
+    EVP_CIPHER_CTX *ctx;
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
@@ -137,8 +152,9 @@ DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigne
     EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
     /* Decrypt plaintext */
     EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct));
-    result.pbData=outbuf;
     result.cbData=outlen;
+    result.pbData=new unsigned char[outlen];
+    memcpy(result.pbData, outbuf, outlen);
     /* Set expected tag value. */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag), (void *)gcm_tag);
     /* Finalise: note get no output for GCM */

