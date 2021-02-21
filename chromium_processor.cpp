@@ -195,38 +195,50 @@ unsigned char *ChromiumProcessor::getMasterKey()
     {
         return prevMasterKey;
     }
-
     json_error_t err;
     json_t *LocalState=json_load_file(LocalStateFile_path.c_str(), 0, &err);
     if(LocalState == NULL)
     {
-        cerr<<"json file is incorrect: "<<LocalStateFile_path<<endl;
-        cerr<<err.text<<endl;
+        fprintf(stderr, "json file is incorrect: %s\n", LocalStateFile_path.c_str());
+        fprintf(stderr, "error text: %s\n", err.text);
         return 0;
     }
     json_t *os_crypt=json_object_get(LocalState, "os_crypt");
     if(os_crypt == NULL)
     {
-        cerr<<"error: have no os_crypt object in JSON"<<endl;
+        fprintf(stderr, "error: have no 'os_crypt' object in JSON\n");
         return(0);
     }
     if(os_crypt->type == JSON_OBJECT)
     {
-        cout<<os_crypt;
         if(json_object_get(os_crypt, "encrypted_key")->type == JSON_STRING)
         {
             stMasterKey=json_string_value(json_object_get(os_crypt, "encrypted_key"));
-            cout<<stMasterKey;
         }
     }
 
     stMasterKey=base64_decode(stMasterKey);
-    cout<<stMasterKey;
+    fprintf(stdout, "Chromium MasterKey: '");
+    for(unsigned long long int i=0; i<stMasterKey.length(); i++)
+    {
+        fprintf(stdout, "%.2x", stMasterKey.data()[i]&0xFF);
+    }
+    fprintf(stdout, "' (hex format, encrypted)\n");
 
     unsigned int len=stMasterKey.length()-5;
     char *bRawMasterKey=new char[len];
     memcpy(bRawMasterKey, stMasterKey.data()+5, len);
 
-    DATA_BLOB kkk =DPAPIDecrypt((unsigned char *)(bRawMasterKey), len);
-    return kkk.pbData;
+    DATA_BLOB finalK=DPAPIDecrypt((unsigned char *)(bRawMasterKey), len);
+
+    fprintf(stdout, "Chromium MasterKey: '");
+    for(unsigned long int i=0; i<finalK.cbData; i++)
+    {
+        fprintf(stdout, "%.2x", finalK.pbData[i]&0xFF);
+    }
+    fprintf(stdout, "' (hex format, decrypted)\n");
+
+    delete[] bRawMasterKey;
+
+    return finalK.pbData;
 }
