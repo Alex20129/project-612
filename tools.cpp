@@ -26,20 +26,17 @@ string base64_decode(const string &in)
 DATA_BLOB DecryptWithKey(unsigned char *crData, unsigned int crDataLen, unsigned char *key)
 {
     DATA_BLOB result;
-    unsigned int bBufferLength=crDataLen-15, bTagLength=16;
-    unsigned char bBuffer[bBufferLength], bIV[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    if(crDataLen>15)
+    unsigned int bBufferLen=crDataLen-15, bTagLength=16, IVLen=12;
+    if(crDataLen>32)
     {
-        memcpy(bIV, &crData[3], 12);
-        memcpy(bBuffer, &crData[15], bBufferLength);
-
+        unsigned char bBuffer[bBufferLen];
+        unsigned char bIV[IVLen];
         unsigned char bTag[bTagLength];
-        memcpy(bTag, &bBuffer[bBufferLength-bTagLength], bTagLength);
-
-        unsigned char bData[bBufferLength-bTagLength];
-        memcpy(bData, bBuffer, bBufferLength-bTagLength);
-
+        unsigned char bData[bBufferLen-bTagLength];
+        memcpy(bIV, &crData[3], IVLen);
+        memcpy(bBuffer, &crData[15], bBufferLen);
+        memcpy(bTag, &bBuffer[bBufferLen-bTagLength], bTagLength);
+        memcpy(bData, bBuffer, bBufferLen-bTagLength);
         result = aes_gcm_decrypt(key, bIV, bData, bTag);
     }
     return result;
@@ -127,7 +124,7 @@ DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigne
 {
     DATA_BLOB result;
     EVP_CIPHER_CTX *ctx;
-    int outlen, rv;
+    int outlen;
     unsigned char outbuf[1024];
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
@@ -145,8 +142,7 @@ DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigne
     /* Set expected tag value. */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag), (void *)gcm_tag);
     /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
-    //cout<<"Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!";
+    EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
     EVP_CIPHER_CTX_free(ctx);
     return result;
 }
