@@ -1,29 +1,36 @@
 #ifndef TOOLS_HPP
 #define TOOLS_HPP
 
+#include <cstring>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <sys/types.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
 #include "jansson.h"
 #include "sqlite3.h"
 
+using namespace std;
+
 #if defined(__WIN64__)
     #include <windows.h>
     #include <Wincrypt.h>
     #include <tchar.h>
-    #include <sys/types.h>
 #elif defined(__linux__)
+struct DATA_BLOB
+{
+    unsigned char *pbData;
+    u_int64_t cbData;
+};
 #endif
 
 #define COOKIE_PREFIX_LENGTH  3
 #define AES_GCM_IV_LENGTH     12
 #define AES_GCM_TAG_LENGTH    16
 
-static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-using namespace std;
+static const string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 string base64_decode(const string &in);
 string cp_datablob_to_string(DATA_BLOB inData);

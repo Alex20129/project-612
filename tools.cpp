@@ -1,7 +1,5 @@
 #include "tools.hpp"
 
-#if defined(__WIN64__)
-
 string base64_decode(const string &in)
 {
     string out;
@@ -147,12 +145,3 @@ DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigne
     EVP_CIPHER_CTX_free(ctx);
     return result;
 }
-
-#elif defined(__linux__)
-
-stringstream get_chrome_pass(sqlite3* db)
-{
-    return stringstream(string(""));
-}
-
-#endif
