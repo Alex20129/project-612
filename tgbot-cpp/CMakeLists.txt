@@ -46,14 +46,14 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 
 ## curl
 find_package(CURL 7.56.0)
-if (CURL_FOUND)
+if(CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIRS})
     add_definitions(-DHAVE_CURL)
 endif()
 
 ## boost
 set(Boost_USE_MULTITHREADED ON)
-if (ENABLE_TESTS)
+if(ENABLE_TESTS)
     find_package(Boost 1.59.0 COMPONENTS system unit_test_framework REQUIRED)
 else()
     find_package(Boost 1.59.0 COMPONENTS system REQUIRED)
@@ -88,7 +88,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_property(TARGET ${PROJECT_NAME} PROPERTY SOVERSION 1)
 
 # tests
-if (ENABLE_TESTS)
+if(ENABLE_TESTS)
     message(STATUS "Building of tests is enabled")
     enable_testing()
     add_subdirectory(test)

@@ -10,7 +10,7 @@ using namespace std;
 namespace StringTools {
 
 bool startsWith(const string& str1, const string& str2) {
-    if (str1.length() < str2.length()) {
+    if(str1.length() < str2.length()) {
         return false;
     }
     string::const_iterator it1(str1.begin());
@@ -18,7 +18,7 @@ bool startsWith(const string& str1, const string& str2) {
     string::const_iterator it2(str2.begin());
     string::const_iterator end2(str2.end());
     while (it1 != end1 && it2 != end2) {
-        if (*it1 != *it2) {
+        if(*it1 != *it2) {
             return false;
         }
         ++it1;
@@ -28,7 +28,7 @@ bool startsWith(const string& str1, const string& str2) {
 }
 
 bool endsWith(const string& str1, const string& str2) {
-    if (str1.length() < str2.length()) {
+    if(str1.length() < str2.length()) {
         return false;
     }
     string::const_iterator it1(str1.end());
@@ -38,7 +38,7 @@ bool endsWith(const string& str1, const string& str2) {
     --begin1;
     --begin2;
     while (it1 != begin1 && it2 != begin2) {
-        if (*it1 != *it2) {
+        if(*it1 != *it2) {
             return false;
         }
         --it1;
@@ -75,7 +75,7 @@ string urlEncode(const string& value, const std::string& additionalLegitChars) {
     static const string legitPunctuation = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-~:";
     std::stringstream ss;
     for (auto const &c : value) {
-        if ((legitPunctuation.find(c) == std::string::npos) && (additionalLegitChars.find(c) == std::string::npos)) {
+        if((legitPunctuation.find(c) == std::string::npos) && (additionalLegitChars.find(c) == std::string::npos)) {
             ss << '%' << std::uppercase << std::setfill('0') << std::setw(2) << std::hex << (unsigned int)(unsigned char)c;
         } else {
             ss << c;
@@ -89,7 +89,7 @@ string urlDecode(const string& value) {
     string result;
     for (std::size_t i = 0, count = value.length(); i < count; ++i) {
         const char c = value[i];
-        if (c == '%') {
+        if(c == '%') {
             int t = stoi(value.substr(i + 1, 2), nullptr, 16);
             result += (char) t;
             i += 2;

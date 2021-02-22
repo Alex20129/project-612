@@ -79,7 +79,7 @@ protected:
                     *data,
                     "\r\n\r\n",
                     [self, data](const boost::system::error_code& e, std::size_t n) {
-                if (e) {
+                if(e) {
                     std::cout << "error in HttpServer::Connection#_readHeader: " << e << std::endl;
                     return;
                 }
@@ -91,13 +91,13 @@ protected:
 
                 unsigned long long size;
                 auto contentLengthIter = headers->find("Content-Length");
-                if (contentLengthIter != headers->end()) {
+                if(contentLengthIter != headers->end()) {
                     size = std::stoull(contentLengthIter->second);
                 } else {
                     size = 0;
                 }
 
-                if (size == 0) {
+                if(size == 0) {
                     std::string answer = self->_httpParser.generateResponse("Bad request", "text/plain", 400, "Bad request", false);
                     boost::asio::async_write(
                             self->_socket,
@@ -120,7 +120,7 @@ protected:
                                     *data,
                                     boost::asio::transfer_exactly(size - data->size()),
                                     [self, data, size, headers](const boost::system::error_code& e, std::size_t n) {
-                if (e) {
+                if(e) {
                     std::cout << "error in HttpServer::Connection#_readBody: " << e << std::endl;
                     return;
                 }
@@ -147,7 +147,7 @@ protected:
 
     void _startAccept() {
         _acceptor.async_accept(_socket, [this](const boost::system::error_code& e) {
-            if (e) {
+            if(e) {
                 std::cout << "error in HttpServer: " << e << std::endl;
                 _startAccept();
                 return;

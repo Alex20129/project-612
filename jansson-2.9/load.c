@@ -704,7 +704,7 @@ static json_t *parse_object(lex_t *lex, size_t flags, json_error_t *error)
         key = lex_steal_string(lex, &len);
         if(!key)
             return NULL;
-        if (memchr(key, '\0', len)) {
+        if(memchr(key, '\0', len)) {
             jsonp_free(key);
             error_set(error, lex, "NUL byte in object key not supported");
             goto error;
@@ -939,7 +939,7 @@ json_t *json_loads(const char *string, size_t flags, json_error_t *error)
 
     jsonp_error_init(error, "<string>");
 
-    if (string == NULL) {
+    if(string == NULL) {
         error_set(error, NULL, "wrong arguments");
         return NULL;
     }
@@ -983,7 +983,7 @@ json_t *json_loadb(const char *buffer, size_t buflen, size_t flags, json_error_t
 
     jsonp_error_init(error, "<buffer>");
 
-    if (buffer == NULL) {
+    if(buffer == NULL) {
         error_set(error, NULL, "wrong arguments");
         return NULL;
     }
@@ -1014,7 +1014,7 @@ json_t *json_loadf(FILE *input, size_t flags, json_error_t *error)
 
     jsonp_error_init(error, source);
 
-    if (input == NULL) {
+    if(input == NULL) {
         error_set(error, NULL, "wrong arguments");
         return NULL;
     }
@@ -1035,7 +1035,7 @@ json_t *json_load_file(const char *path, size_t flags, json_error_t *error)
 
     jsonp_error_init(error, path);
 
-    if (path == NULL) {
+    if(path == NULL) {
         error_set(error, NULL, "wrong arguments");
         return NULL;
     }
@@ -1095,7 +1095,7 @@ json_t *json_load_callback(json_load_callback_t callback, void *arg, size_t flag
 
     jsonp_error_init(error, "<callback>");
 
-    if (callback == NULL) {
+    if(callback == NULL) {
         error_set(error, NULL, "wrong arguments");
         return NULL;
     }

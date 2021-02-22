@@ -299,13 +299,13 @@ static json_t *pack_string(scanner_t *s, va_list *ap)
 
     next_token(s);
     nullable = token(s) == '?';
-    if (!nullable)
+    if(!nullable)
         prev_token(s);
 
     str = read_string(s, ap, "string", &len, &ours);
-    if (!str) {
+    if(!str) {
         return nullable ? json_null() : NULL;
-    } else if (ours) {
+    } else if(ours) {
         return jsonp_stringn_nocheck_own(str, len);
     } else {
         return json_stringn_nocheck(str, len);
@@ -346,11 +346,11 @@ static json_t *pack(scanner_t *s, va_list *ap)
 
             next_token(s);
             nullable = token(s) == '?';
-            if (!nullable)
+            if(!nullable)
                 prev_token(s);
 
             json = va_arg(*ap, json_t *);
-            if (!json && nullable) {
+            if(!json && nullable) {
                 return json_null();
             } else {
                 return json_incref(json);
@@ -364,11 +364,11 @@ static json_t *pack(scanner_t *s, va_list *ap)
 
             next_token(s);
             nullable = token(s) == '?';
-            if (!nullable)
+            if(!nullable)
                 prev_token(s);
 
             json = va_arg(*ap, json_t *);
-            if (!json && nullable) {
+            if(!json && nullable) {
                 return json_null();
             } else {
                 return json;
@@ -478,14 +478,14 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap)
         strbuffer_t unrecognized_keys;
         json_t *value;
         long unpacked = 0;
-        if (gotopt) {
+        if(gotopt) {
             /* We have optional keys, we need to iter on each key */
             json_object_foreach(root, key, value) {
                 if(!hashtable_get(&key_set, key)) {
                     unpacked++;
 
                     /* Save unrecognized keys for the error message */
-                    if (!have_unrecognized_keys) {
+                    if(!have_unrecognized_keys) {
                         strbuffer_init(&unrecognized_keys);
                         have_unrecognized_keys = 1;
                     } else {
@@ -498,12 +498,12 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap)
             /* No optional keys, we can just compare the number of items */
             unpacked = (long)json_object_size(root) - (long)key_set.size;
         }
-        if (unpacked) {
-            if (!gotopt) {
+        if(unpacked) {
+            if(!gotopt) {
                 /* Save unrecognized keys for the error message */
                 json_object_foreach(root, key, value) {
                     if(!hashtable_get(&key_set, key)) {
-                        if (!have_unrecognized_keys) {
+                        if(!have_unrecognized_keys) {
                             strbuffer_init(&unrecognized_keys);
                             have_unrecognized_keys = 1;
                         } else {

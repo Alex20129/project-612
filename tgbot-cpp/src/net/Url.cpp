@@ -16,36 +16,36 @@ Url::Url(const string& url) {
     for (std::size_t i = 0, count = url.length(); i < count; ++i) {
         char c = url[i];
 
-        if (!isProtocolParsed) {
-            if (c == ':') {
+        if(!isProtocolParsed) {
+            if(c == ':') {
                 isProtocolParsed = true;
                 i += 2;
             } else {
                 protocol += c;
             }
-        } else if (!isHostParsed) {
-            if (c == '/') {
+        } else if(!isHostParsed) {
+            if(c == '/') {
                 isHostParsed = true;
                 path += '/';
-            } else if (c == '?') {
+            } else if(c == '?') {
                 isHostParsed = isPathParsed = true;
                 path += '/';
-            } else if (c == '#') {
+            } else if(c == '#') {
                 isHostParsed = isPathParsed = isQueryParsed = true;
                 path += '/';
             } else {
                 host += c;
             }
-        } else if (!isPathParsed) {
-            if (c == '?') {
+        } else if(!isPathParsed) {
+            if(c == '?') {
                 isPathParsed = true;
-            } else if (c == '#') {
+            } else if(c == '#') {
                 isPathParsed = isQueryParsed = true;
             } else {
                 path += c;
             }
-        } else if (!isQueryParsed) {
-            if (c == '#') {
+        } else if(!isQueryParsed) {
+            if(c == '#') {
                 isQueryParsed = true;
             } else {
                 query += c;

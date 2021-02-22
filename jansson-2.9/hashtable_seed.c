@@ -69,7 +69,7 @@ static int seed_from_urandom(unsigned int *seed) {
 #if defined(HAVE_OPEN) && defined(HAVE_CLOSE) && defined(HAVE_READ)
     int urandom;
     urandom = open("/dev/urandom", O_RDONLY);
-    if (urandom == -1)
+    if(urandom == -1)
         return 1;
 
     ok = read(urandom, data, sizeof(unsigned int)) == sizeof(unsigned int);
@@ -78,14 +78,14 @@ static int seed_from_urandom(unsigned int *seed) {
     FILE *urandom;
 
     urandom = fopen("/dev/urandom", "rb");
-    if (!urandom)
+    if(!urandom)
         return 1;
 
     ok = fread(data, 1, sizeof(unsigned int), urandom) == sizeof(unsigned int);
     fclose(urandom);
 #endif
 
-    if (!ok)
+    if(!ok)
         return 1;
 
     *seed = buf_to_uint32(data);
@@ -116,24 +116,24 @@ static int seed_from_windows_cryptoapi(unsigned int *seed)
         return 1;
 
     pCryptAcquireContext = (CRYPTACQUIRECONTEXTA)GetProcAddress(hAdvAPI32, "CryptAcquireContextA");
-    if (!pCryptAcquireContext)
+    if(!pCryptAcquireContext)
         return 1;
 
     pCryptGenRandom = (CRYPTGENRANDOM)GetProcAddress(hAdvAPI32, "CryptGenRandom");
-    if (!pCryptGenRandom)
+    if(!pCryptGenRandom)
         return 1;
 
     pCryptReleaseContext = (CRYPTRELEASECONTEXT)GetProcAddress(hAdvAPI32, "CryptReleaseContext");
-    if (!pCryptReleaseContext)
+    if(!pCryptReleaseContext)
         return 1;
 
-    if (!pCryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+    if(!pCryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
         return 1;
 
     ok = pCryptGenRandom(hCryptProv, sizeof(unsigned int), data);
     pCryptReleaseContext(hCryptProv, 0);
 
-    if (!ok)
+    if(!ok)
         return 1;
 
     *seed = buf_to_uint32((char *)data);
@@ -168,23 +168,23 @@ static unsigned int generate_seed() {
     int done = 0;
 
 #if !defined(_WIN32) && defined(USE_URANDOM)
-    if (!done && seed_from_urandom(&seed) == 0)
+    if(!done && seed_from_urandom(&seed) == 0)
         done = 1;
 #endif
 
 #if defined(_WIN32) && defined(USE_WINDOWS_CRYPTOAPI)
-    if (!done && seed_from_windows_cryptoapi(&seed) == 0)
+    if(!done && seed_from_windows_cryptoapi(&seed) == 0)
         done = 1;
 #endif
 
-    if (!done) {
+    if(!done) {
         /* Fall back to timestamp and PID if no better randomness is
            available */
         seed_from_timestamp_and_pid(&seed);
     }
 
     /* Make sure the seed is never zero */
-    if (seed == 0)
+    if(seed == 0)
         seed = 1;
 
     return seed;
@@ -199,10 +199,10 @@ static volatile char seed_initialized = 0;
 void json_object_seed(size_t seed) {
     unsigned int new_seed = (unsigned int)seed;
 
-    if (hashtable_seed == 0) {
-        if (__atomic_test_and_set(&seed_initialized, __ATOMIC_RELAXED) == 0) {
+    if(hashtable_seed == 0) {
+        if(__atomic_test_and_set(&seed_initialized, __ATOMIC_RELAXED) == 0) {
             /* Do the seeding ourselves */
-            if (new_seed == 0)
+            if(new_seed == 0)
                 new_seed = generate_seed();
 
             __atomic_store_n(&hashtable_seed, new_seed, __ATOMIC_RELEASE);
@@ -220,8 +220,8 @@ void json_object_seed(size_t seed) {
 void json_object_seed(size_t seed) {
     unsigned int new_seed = (unsigned int)seed;
 
-    if (hashtable_seed == 0) {
-        if (new_seed == 0) {
+    if(hashtable_seed == 0) {
+        if(new_seed == 0) {
             /* Explicit synchronization fences are not supported by the
                __sync builtins, so every thread getting here has to
                generate the seed value.
@@ -230,7 +230,7 @@ void json_object_seed(size_t seed) {
         }
 
         do {
-            if (__sync_bool_compare_and_swap(&hashtable_seed, 0, new_seed)) {
+            if(__sync_bool_compare_and_swap(&hashtable_seed, 0, new_seed)) {
                 /* We were the first to seed */
                 break;
             } else {
@@ -247,10 +247,10 @@ static long seed_initialized = 0;
 void json_object_seed(size_t seed) {
     unsigned int new_seed = (unsigned int)seed;
 
-    if (hashtable_seed == 0) {
-        if (InterlockedIncrement(&seed_initialized) == 1) {
+    if(hashtable_seed == 0) {
+        if(InterlockedIncrement(&seed_initialized) == 1) {
             /* Do the seeding ourselves */
-            if (new_seed == 0)
+            if(new_seed == 0)
                 new_seed = generate_seed();
 
             hashtable_seed = new_seed;
@@ -267,8 +267,8 @@ void json_object_seed(size_t seed) {
 void json_object_seed(size_t seed) {
     unsigned int new_seed = (unsigned int)seed;
 
-    if (hashtable_seed == 0) {
-        if (new_seed == 0)
+    if(hashtable_seed == 0) {
+        if(new_seed == 0)
             new_seed = generate_seed();
 
         hashtable_seed = new_seed;

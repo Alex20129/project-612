@@ -38,14 +38,14 @@ std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpRe
     curl_mime* mime;
     curl_mimepart* part;
     mime = curl_mime_init(curl);
-    if (!args.empty()) {
+    if(!args.empty()) {
         for (const HttpReqArg& a : args) {
             part = curl_mime_addpart(mime);
 
             curl_mime_data(part, a.value.c_str(), a.value.size());
             curl_mime_type(part, a.mimeType.c_str());
             curl_mime_name(part, a.name.c_str());
-            if (a.isFile) {
+            if(a.isFile) {
                 curl_mime_filename(part, a.fileName.c_str());
             }
         }
@@ -61,7 +61,7 @@ std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpRe
     curl_easy_cleanup(curl);
     curl_mime_free(mime);
 
-    if (res != CURLE_OK) {
+    if(res != CURLE_OK) {
         throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
     }
 

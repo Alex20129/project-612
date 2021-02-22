@@ -334,7 +334,7 @@ public:
     template<typename T>
     std::shared_ptr<T> tryParseJson(JsonToTgTypeFunc<T> parseFunc, const boost::property_tree::ptree& data, const std::string& keyName) const {
         auto treeItem = data.find(keyName);
-        if (treeItem == data.not_found()) {
+        if(treeItem == data.not_found()) {
             return std::shared_ptr<T>();
         }
         return (this->*parseFunc)(treeItem->second);
@@ -354,7 +354,7 @@ public:
     std::vector<T> parseJsonAndGetArray(std::function<T(const boost::property_tree::ptree&)> parseFunc, const boost::property_tree::ptree& data, const std::string& keyName) const {
         std::vector<T> result;
         auto treeItem = data.find(keyName);
-        if (treeItem == data.not_found()) {
+        if(treeItem == data.not_found()) {
             return result;
         }
         result.reserve(treeItem->second.size());
@@ -368,7 +368,7 @@ public:
     std::vector<std::shared_ptr<T>> parseJsonAndGetArray(JsonToTgTypeFunc<T> parseFunc, const boost::property_tree::ptree& data, const std::string& keyName) const {
         std::vector<std::shared_ptr<T>> result;
         auto treeItem = data.find(keyName);
-        if (treeItem == data.not_found()) {
+        if(treeItem == data.not_found()) {
             return result;
         }
         result.reserve(treeItem->second.size());
@@ -382,7 +382,7 @@ public:
     std::vector<std::vector<std::shared_ptr<T>>> parseJsonAndGet2DArray(JsonToTgTypeFunc<T> parseFunc, const boost::property_tree::ptree& data, const std::string& keyName) const {
         std::vector<std::vector<std::shared_ptr<T>>> result;
         auto treeItem = data.find(keyName);
-        if (treeItem == data.not_found()) {
+        if(treeItem == data.not_found()) {
             return result;
         }
         result.reserve(treeItem->second.size());
@@ -398,7 +398,7 @@ public:
 
     template<typename T>
     std::string parseArray(TgTypeToJsonFunc<T> parseFunc, const std::vector<std::shared_ptr<T>>& objects) const {
-        if (objects.empty())
+        if(objects.empty())
             return "";
         std::string result;
         result += '[';
@@ -413,7 +413,7 @@ public:
 
     template<typename T>
     std::string parseArray(std::function<T(const T&)> parseFunc, const std::vector<T>& objects) const {
-        if (objects.empty())
+        if(objects.empty())
             return "";
         std::string result;
         result += '[';
@@ -428,7 +428,7 @@ public:
 
     template<typename T>
     std::string parse2DArray(TgTypeToJsonFunc<T> parseFunc, const std::vector<std::vector<std::shared_ptr<T>>>& objects) const {
-        if (objects.empty())
+        if(objects.empty())
             return "";
         std::string result;
         result += '[';
@@ -448,7 +448,7 @@ private:
 
     template<typename T>
     inline void appendToJson(std::string& json, const std::string& varName, const std::shared_ptr<T>& value) const {
-        if (value == nullptr) {
+        if(value == nullptr) {
             return;
         }
         json += '"';
@@ -495,7 +495,7 @@ private:
     }
 
     inline void appendToJson(std::string& json, const std::string& varName, const char* value) const {
-        if (value != nullptr){
+        if(value != nullptr){
             std::string strValue(value);
             appendToJson(json, varName, strValue);
         }

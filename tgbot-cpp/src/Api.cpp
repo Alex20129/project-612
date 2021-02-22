@@ -28,19 +28,19 @@ Message::Ptr Api::sendMessage(std::int64_t chatId, const string& text, bool disa
     args.reserve(7);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("text", text);
-    if (disableWebPagePreview) {
+    if(disableWebPagePreview) {
         args.emplace_back("disable_web_page_preview", disableWebPagePreview);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendMessage", args));
@@ -52,7 +52,7 @@ Message::Ptr Api::forwardMessage(std::int64_t chatId, std::int64_t fromChatId, s
     args.emplace_back("chat_id", chatId);
     args.emplace_back("from_chat_id", fromChatId);
     args.emplace_back("message_id", messageId);
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("forwardMessage", args));
@@ -62,25 +62,25 @@ Message::Ptr Api::sendPhoto(std::int64_t chatId, boost::variant<InputFile::Ptr, 
     vector<HttpReqArg> args;
     args.reserve(7);
     args.emplace_back("chat_id", chatId);
-    if (photo.which() == 0 /* InputFile::Ptr */) {
+    if(photo.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(photo);
         args.emplace_back("photo", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("photo", boost::get<std::string>(photo));
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendPhoto", args));
@@ -90,43 +90,43 @@ Message::Ptr Api::sendAudio(std::int64_t chatId, boost::variant<InputFile::Ptr, 
     vector<HttpReqArg> args;
     args.reserve(11);
     args.emplace_back("chat_id", chatId);
-    if (audio.which() == 0 /* InputFile::Ptr */) {
+    if(audio.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(audio);
         args.emplace_back("audio", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("audio", boost::get<std::string>(audio));
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (duration) {
+    if(duration) {
         args.emplace_back("duration", duration);
     }
-    if (!performer.empty()){
+    if(!performer.empty()){
         args.emplace_back("performer", performer);
     }
-    if (!title.empty()){
+    if(!title.empty()){
         args.emplace_back("title", title);
     }
-    if (thumb.which() == 0 /* InputFile::Ptr */) {
+    if(thumb.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(thumb);
         args.emplace_back("thumb", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         auto thumbStr = boost::get<std::string>(thumb);
-        if (!thumbStr.empty()) {
+        if(!thumbStr.empty()) {
             args.emplace_back("thumb", thumbStr);
         }
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendAudio", args));
@@ -136,34 +136,34 @@ Message::Ptr Api::sendDocument(std::int64_t chatId, boost::variant<InputFile::Pt
     vector<HttpReqArg> args;
     args.reserve(8);
     args.emplace_back("chat_id", chatId);
-    if (document.which() == 0 /* InputFile::Ptr */) {
+    if(document.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(document);
         args.emplace_back("document", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("document", boost::get<std::string>(document));
     }
-    if (thumb.which() == 0 /* InputFile::Ptr */) {
+    if(thumb.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(thumb);
         args.emplace_back("thumb", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         auto thumbStr = boost::get<std::string>(thumb);
-        if (!thumbStr.empty()) {
+        if(!thumbStr.empty()) {
             args.emplace_back("thumb", thumbStr);
         }
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendDocument", args));
@@ -186,49 +186,49 @@ Message::Ptr Api::sendInvoice(std::int64_t chatId, const std::string& title, con
     args.emplace_back("start_parameter", startParameter);
     args.emplace_back("currency", currency);
     args.emplace_back("prices", _tgTypeParser.parseArray<LabeledPrice>(&TgTypeParser::parseLabeledPrice, prices));
-    if (!providerData.empty()) {
+    if(!providerData.empty()) {
         args.emplace_back("provider_data", providerData);
     }
-    if (!photoUrl.empty()) {
+    if(!photoUrl.empty()) {
         args.emplace_back("photo_url", photoUrl);
     }
-    if (photoSize) {
+    if(photoSize) {
         args.emplace_back("photo_size", photoSize);
     }
-    if (photoWidth) {
+    if(photoWidth) {
         args.emplace_back("photo_width", photoWidth);
     }
-    if (photoHeight) {
+    if(photoHeight) {
         args.emplace_back("photo_height", photoHeight);
     }
-    if (needName) {
+    if(needName) {
         args.emplace_back("need_name", needName);
     }
-    if (needPhoneNumber) {
+    if(needPhoneNumber) {
         args.emplace_back("need_phone_number", needPhoneNumber);
     }
-    if (needEmail) {
+    if(needEmail) {
         args.emplace_back("need_email", needEmail);
     }
-    if (needShippingAddress) {
+    if(needShippingAddress) {
         args.emplace_back("need_shipping_address", needShippingAddress);
     }
-    if (sendPhoneNumberToProvider) {
+    if(sendPhoneNumberToProvider) {
         args.emplace_back("send_phone_number_to_provider", sendPhoneNumberToProvider);
     }
-    if (sendEmailToProvider) {
+    if(sendEmailToProvider) {
         args.emplace_back("send_email_to_provider", sendEmailToProvider);
     }
-    if (isFlexible) {
+    if(isFlexible) {
         args.emplace_back("is_flexible", isFlexible);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendInvoice", args));
@@ -239,10 +239,10 @@ bool Api::answerShippingQuery(const std::string& shippingQueryId, bool ok, const
     args.reserve(4);
     args.emplace_back("shipping_query_id", shippingQueryId);
     args.emplace_back("ok", ok);
-    if (!shippingOptions.empty()) {
+    if(!shippingOptions.empty()) {
         args.emplace_back("shipping_options", _tgTypeParser.parseArray<ShippingOption>(&TgTypeParser::parseShippingOption, shippingOptions));
     }
-    if (!errorMessage.empty()) {
+    if(!errorMessage.empty()) {
         args.emplace_back("error_message", errorMessage);
     }
     return sendRequest("answerShippingQuery", args).get<bool>("", false);
@@ -253,7 +253,7 @@ bool Api::answerPreCheckoutQuery(const std::string& preCheckoutQueryId, bool ok,
     args.reserve(3);
     args.emplace_back("pre_checkout_query_id", preCheckoutQueryId);
     args.emplace_back("ok", ok);
-    if (!errorMessage.empty()) {
+    if(!errorMessage.empty()) {
         args.emplace_back("error_message", errorMessage);
     }
     return sendRequest("answerPreCheckoutQuery", args).get<bool>("", false);
@@ -264,19 +264,19 @@ Message::Ptr Api::sendSticker(std::int64_t chatId, boost::variant<InputFile::Ptr
     vector<HttpReqArg> args;
     args.reserve(5);
     args.emplace_back("chat_id", chatId);
-    if (sticker.which() == 0 /* InputFile::Ptr */) {
+    if(sticker.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(sticker);
         args.emplace_back("sticker", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("sticker", boost::get<std::string>(sticker));
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendSticker", args));
@@ -303,17 +303,17 @@ bool Api::createNewStickerSet(std::int32_t userId, const string& name, const str
     args.emplace_back("user_id", userId);
     args.emplace_back("name", name);
     args.emplace_back("title", title);
-    if (pngSticker.which() == 0 /* InputFile::Ptr */) {
+    if(pngSticker.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(pngSticker);
         args.emplace_back("png_sticker", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("png_sticker", boost::get<std::string>(pngSticker));
     }
     args.emplace_back("emojis", emojis);
-    if (containsMasks) {
+    if(containsMasks) {
         args.emplace_back("contains_mask", containsMasks);
     }
-    if (maskPosition != nullptr) {
+    if(maskPosition != nullptr) {
         args.emplace_back("mask_position", _tgTypeParser.parseMaskPosition(maskPosition));
     }
     return sendRequest("createNewStickerSet", args).get<bool>("", false);
@@ -324,14 +324,14 @@ bool Api::addStickerToSet(std::int32_t userId, const string& name, boost::varian
     args.reserve(6);
     args.emplace_back("user_id", userId);
     args.emplace_back("name", name);
-    if (pngSticker.which() == 0 /* InputFile::Ptr */) {
+    if(pngSticker.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(pngSticker);
         args.emplace_back("png_sticker", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("png_sticker", boost::get<std::string>(pngSticker));
     }
     args.emplace_back("emojis", emojis);
-    if (maskPosition != nullptr) {
+    if(maskPosition != nullptr) {
         args.emplace_back("mask_position", _tgTypeParser.parseMaskPosition(maskPosition));
     }
     return sendRequest("addStickerToSet", args).get<bool>("", false);
@@ -356,46 +356,46 @@ Message::Ptr Api::sendVideo(std::int64_t chatId, boost::variant<InputFile::Ptr, 
     vector<HttpReqArg> args;
     args.reserve(12);
     args.emplace_back("chat_id", chatId);
-    if (video.which() == 0 /* InputFile::Ptr */) {
+    if(video.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(video);
         args.emplace_back("video", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("video", boost::get<std::string>(video));
     }
-    if (supportsStreaming) {
+    if(supportsStreaming) {
         args.emplace_back("supports_streaming", supportsStreaming);
     }
-    if (duration) {
+    if(duration) {
         args.emplace_back("duration", duration);
     }
-    if (width) {
+    if(width) {
         args.emplace_back("width", width);
     }
-    if (height) {
+    if(height) {
         args.emplace_back("height", height);
     }
-    if (thumb.which() == 0 /* InputFile::Ptr */) {
+    if(thumb.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(thumb);
         args.emplace_back("thumb", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         auto thumbStr = boost::get<std::string>(thumb);
-        if (!thumbStr.empty()) {
+        if(!thumbStr.empty()) {
             args.emplace_back("thumb", thumbStr);
         }
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendVideo", args));
@@ -405,43 +405,43 @@ Message::Ptr Api::sendAnimation(std::int64_t chatId, boost::variant<InputFile::P
     vector<HttpReqArg> args;
     args.reserve(11);
     args.emplace_back("chat_id", chatId);
-    if (animation.which() == 0 /* InputFile::Ptr */) {
+    if(animation.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(animation);
         args.emplace_back("animation", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("animation", boost::get<std::string>(animation));
     }
-    if (duration) {
+    if(duration) {
         args.emplace_back("duration", duration);
     }
-    if (width) {
+    if(width) {
         args.emplace_back("width", width);
     }
-    if (height) {
+    if(height) {
         args.emplace_back("height", height);
     }
-    if (thumb.which() == 0 /* InputFile::Ptr */) {
+    if(thumb.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(thumb);
         args.emplace_back("thumb", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         auto thumbStr = boost::get<std::string>(thumb);
-        if (!thumbStr.empty()) {
+        if(!thumbStr.empty()) {
             args.emplace_back("thumb", thumbStr);
         }
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendAnimation", args));
@@ -451,34 +451,34 @@ Message::Ptr Api::sendVideoNote(std::int64_t chatId, boost::variant<InputFile::P
     vector<HttpReqArg> args;
     args.reserve(8);
     args.emplace_back("chat_id", chatId);
-    if (videoNote.which() == 0 /* InputFile::Ptr */) {
+    if(videoNote.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(videoNote);
         args.emplace_back("video_note", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("video_note", boost::get<std::string>(videoNote));
     }
-    if (disableNotification) {
+    if(disableNotification) {
         args.emplace_back("disable_notification", disableNotification);
     }
-    if (duration) {
+    if(duration) {
         args.emplace_back("duration", duration);
     }
-    if (length) {
+    if(length) {
         args.emplace_back("length", length);
     }
-    if (thumb.which() == 0 /* InputFile::Ptr */) {
+    if(thumb.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(thumb);
         args.emplace_back("thumb", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         auto thumbStr = boost::get<std::string>(thumb);
-        if (!thumbStr.empty()) {
+        if(!thumbStr.empty()) {
             args.emplace_back("thumb", thumbStr);
         }
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendVideoNote", args));
@@ -499,28 +499,28 @@ Message::Ptr Api::sendVoice(std::int64_t chatId, boost::variant<InputFile::Ptr, 
     vector<HttpReqArg> args;
     args.reserve(8);
     args.emplace_back("chat_id", chatId);
-    if (voice.which() == 0 /* InputFile::Ptr */) {
+    if(voice.which() == 0 /* InputFile::Ptr */) {
         auto file = boost::get<InputFile::Ptr>(voice);
         args.emplace_back("voice", file->data, true, file->mimeType, file->fileName);
     } else /* std::string */ {
         args.emplace_back("voice", boost::get<std::string>(voice));
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (duration){
+    if(duration){
         args.emplace_back("duration", duration);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendVoice", args));
@@ -531,13 +531,13 @@ Message::Ptr Api::sendGame(std::int64_t chatId, const std::string& gameShortName
     args.reserve(5);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("game_short_name", gameShortName);
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendGame", args));
@@ -549,16 +549,16 @@ Message::Ptr Api::sendLocation(std::int64_t chatId, float latitude, float longit
     args.emplace_back("chat_id", chatId);
     args.emplace_back("latitude", latitude);
     args.emplace_back("longitude", longitude);
-    if (livePeriod) {
+    if(livePeriod) {
         args.emplace_back("live_period", livePeriod);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendLocation", args));
@@ -569,16 +569,16 @@ Message::Ptr Api::editMessageLiveLocation(float latitude, float longitude, std::
     args.reserve(6);
     args.emplace_back("latitude", latitude);
     args.emplace_back("longitude", longitude);
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (inlineMessageId) {
+    if(inlineMessageId) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseInlineKeyboardMarkup(replyMarkup));
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("editMessageLiveLocation", args));
@@ -587,16 +587,16 @@ Message::Ptr Api::editMessageLiveLocation(float latitude, float longitude, std::
 Message::Ptr Api::stopMessageLiveLocation(std::int64_t chatId, std::int32_t messageId, std::int32_t inlineMessageId, const InlineKeyboardMarkup::Ptr replyMarkup) const {
     vector<HttpReqArg> args;
     args.reserve(4);
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (inlineMessageId) {
+    if(inlineMessageId) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseInlineKeyboardMarkup(replyMarkup));
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("editMessageLiveLocation", args));
@@ -625,19 +625,19 @@ Message::Ptr Api::sendVenue(std::int64_t chatId, float latitude, float longitude
     args.emplace_back("longitude", longitude);
     args.emplace_back("title", title);
     args.emplace_back("address", address);
-    if (!foursquareId.empty()) {
+    if(!foursquareId.empty()) {
         args.emplace_back("foursquare_id", foursquareId);
     }
-    if (!foursquareType.empty()) {
+    if(!foursquareType.empty()) {
         args.emplace_back("foursquare_type", foursquareType);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendVenue", args));
@@ -649,19 +649,19 @@ Message::Ptr Api::sendContact(std::int64_t chatId, const string& phoneNumber, co
     args.emplace_back("chat_id", chatId);
     args.emplace_back("phone_number", phoneNumber);
     args.emplace_back("first_name", firstName);
-    if (!lastName.empty()) {
+    if(!lastName.empty()) {
         args.emplace_back("last_name", lastName);
     }
-    if (!vcard.empty()) {
+    if(!vcard.empty()) {
         args.emplace_back("vcard", vcard);
     }
-    if (replyToMessageId) {
+    if(replyToMessageId) {
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendContact", args));
@@ -679,7 +679,7 @@ UserProfilePhotos::Ptr Api::getUserProfilePhotos(std::int32_t userId, std::int32
     vector<HttpReqArg> args;
     args.reserve(3);
     args.emplace_back("user_id", userId);
-    if (offset) {
+    if(offset) {
         args.emplace_back("offset", offset);
     }
     limit = max(1, min(100, limit));
@@ -726,16 +726,16 @@ bool Api::answerCallbackQuery(const string & callbackQueryId, const string & tex
     vector<HttpReqArg> args;
     args.reserve(5);
     args.emplace_back("callback_query_id", callbackQueryId);
-    if (!text.empty()) {
+    if(!text.empty()) {
         args.emplace_back("text", text);
     }
-    if (showAlert) {
+    if(showAlert) {
         args.emplace_back("show_alert", showAlert);
     }
-    if (!url.empty()) {
+    if(!url.empty()) {
         args.emplace_back("url", url);
     }
-    if (cacheTime) {
+    if(cacheTime) {
         args.emplace_back("cache_time", cacheTime);
     }
     return sendRequest("answerCallbackQuery", args).get<bool>("", false);
@@ -747,26 +747,26 @@ Message::Ptr Api::editMessageText(const string& text, std::int64_t chatId, std::
     vector<HttpReqArg> args;
     args.reserve(7);
     args.emplace_back("text", text);
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (!inlineMessageId.empty()) {
+    if(!inlineMessageId.empty()) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (!parseMode.empty()) {
+    if(!parseMode.empty()) {
         args.emplace_back("parse_mode", parseMode);
     }
-    if (disableWebPagePreview) {
+    if(disableWebPagePreview) {
         args.emplace_back("disable_web_page_preview", disableWebPagePreview);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     ptree p = sendRequest("editMessageText", args);
-    if (p.get_child_optional("message_id")) {
+    if(p.get_child_optional("message_id")) {
         return _tgTypeParser.parseJsonAndGetMessage(p);
     } else {
         return nullptr;
@@ -778,23 +778,23 @@ Message::Ptr Api::editMessageCaption(std::int64_t chatId, std::int32_t messageId
 
     vector<HttpReqArg> args;
     args.reserve(5);
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (!caption.empty()) {
+    if(!caption.empty()) {
         args.emplace_back("caption", caption);
     }
-    if (!inlineMessageId.empty()) {
+    if(!inlineMessageId.empty()) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     ptree p = sendRequest("editMessageCaption", args);
-    if (p.get_child_optional("message_id")) {
+    if(p.get_child_optional("message_id")) {
         return _tgTypeParser.parseJsonAndGetMessage(p);
     } else {
         return nullptr;
@@ -806,20 +806,20 @@ Message::Ptr Api::editMessageReplyMarkup(std::int64_t chatId, std::int32_t messa
 
     vector<HttpReqArg> args;
     args.reserve(4);
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (!inlineMessageId.empty()) {
+    if(!inlineMessageId.empty()) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     ptree p = sendRequest("editMessageReplyMarkup", args);
-    if (p.get_child_optional("message_id")) {
+    if(p.get_child_optional("message_id")) {
         return _tgTypeParser.parseJsonAndGetMessage(p);
     } else {
         return nullptr;
@@ -832,20 +832,20 @@ Message::Ptr Api::editMessageMedia(InputMedia::Ptr media, std::int64_t chatId, s
     vector<HttpReqArg> args;
     args.reserve(5);
     args.emplace_back("media", _tgTypeParser.parseInputMedia(media));
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (!inlineMessageId.empty()) {
+    if(!inlineMessageId.empty()) {
         args.emplace_back("inline_message_id", inlineMessageId);
     }
-    if (replyMarkup) {
+    if(replyMarkup) {
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     ptree p = sendRequest("editMessageMedia", args);
-    if (p.get_child_optional("message_id")) {
+    if(p.get_child_optional("message_id")) {
         return _tgTypeParser.parseJsonAndGetMessage(p);
     } else {
         return nullptr;
@@ -863,15 +863,15 @@ ChatMember::Ptr Api::getChatMember(std::int64_t chatId, std::int32_t userId) con
 vector<Update::Ptr> Api::getUpdates(std::int32_t offset, std::int32_t limit, std::int32_t timeout, const StringArrayPtr &allowedUpdates) const {
     vector<HttpReqArg> args;
     args.reserve(4);
-    if (offset) {
+    if(offset) {
         args.emplace_back("offset", offset);
     }
     limit = max(1, min(100, limit));
     args.emplace_back("limit", limit);
-    if (timeout) {
+    if(timeout) {
         args.emplace_back("timeout", timeout);
     }
-    if (allowedUpdates != nullptr) {
+    if(allowedUpdates != nullptr) {
         string allowedUpdatesJson = _tgTypeParser.parseArray<string>(
             [](const string &s)->string {
             return s;
@@ -884,16 +884,16 @@ vector<Update::Ptr> Api::getUpdates(std::int32_t offset, std::int32_t limit, std
 void Api::setWebhook(const string& url, const InputFile::Ptr certificate, std::int32_t maxConnection, const StringArrayPtr &allowedUpdates) const {
     vector<HttpReqArg> args;
     args.reserve(4);
-    if (!url.empty()) {
+    if(!url.empty()) {
         args.emplace_back("url", url);
     }
-    if (certificate != nullptr) {
+    if(certificate != nullptr) {
         args.emplace_back("certificate", certificate->data, true, certificate->mimeType, certificate->fileName);
     }
-    if (maxConnection != 40) {
+    if(maxConnection != 40) {
         args.emplace_back("max_connections", maxConnection);
     }
-    if (allowedUpdates != nullptr) {
+    if(allowedUpdates != nullptr) {
         auto allowedUpdatesJson = _tgTypeParser.parseArray<string>(
             [](const string &s)->string {
                 return s;
@@ -911,10 +911,10 @@ bool Api::deleteWebhook() const {
 WebhookInfo::Ptr Api::getWebhookInfo() const {
     ptree p = sendRequest("getWebhookInfo");
 
-    if (!p.get_child_optional("url")) {
+    if(!p.get_child_optional("url")) {
         return nullptr;
     }
-    if (p.get<string>("url","") != string("")) {
+    if(p.get<string>("url","") != string("")) {
         return _tgTypeParser.parseJsonAndGetWebhookInfo(p);
     }
     else {
@@ -929,19 +929,19 @@ bool Api::answerInlineQuery(const string& inlineQueryId, const std::vector<Inlin
     args.emplace_back("inline_query_id", inlineQueryId);
     string resultsJson = _tgTypeParser.parseArray<InlineQueryResult>(&TgTypeParser::parseInlineQueryResult, results);
     args.emplace_back("results", resultsJson);
-    if (cacheTime) {
+    if(cacheTime) {
         args.emplace_back("cache_time", cacheTime);
     }
-    if (isPersonal) {
+    if(isPersonal) {
         args.emplace_back("is_personal", isPersonal);
     }
-    if (!nextOffset.empty()) {
+    if(!nextOffset.empty()) {
         args.emplace_back("next_offset", nextOffset);
     }
-    if (!switchPmText.empty()) {
+    if(!switchPmText.empty()) {
         args.emplace_back("switch_pm_text", switchPmText);
     }
-    if (!switchPmParameter.empty()) {
+    if(!switchPmParameter.empty()) {
         args.emplace_back("switch_pm_parameter", switchPmParameter);
     }
     return sendRequest("answerInlineQuery", args).get<bool>("", false);
@@ -952,7 +952,7 @@ bool Api::kickChatMember(std::int64_t chatId, std::int32_t userId, std::uint64_t
     args.reserve(3);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("user_id", userId);
-    if (untilDate) {
+    if(untilDate) {
         args.emplace_back("until_date", untilDate);
     }
     return sendRequest("kickChatMember", args).get<bool>("", false);
@@ -972,7 +972,7 @@ bool Api::restrictChatMember(std::int64_t chatId, std::int32_t userId, TgBot::Ch
     args.emplace_back("chat_id", chatId);
     args.emplace_back("user_id", userId);
     args.emplace_back("permissions", _tgTypeParser.parseChatPermissions(permissions));
-    if (untilDate) {
+    if(untilDate) {
         args.emplace_back("until_date", untilDate);
     }
 
@@ -985,25 +985,25 @@ bool Api::promoteChatMember(std::int64_t chatId, std::int32_t userId, bool canCh
     args.reserve(9);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("user_id", userId);
-    if (canChangeInfo) {
+    if(canChangeInfo) {
         args.emplace_back("can_change_info", canChangeInfo);
     }
-    if (canPostMessages) {
+    if(canPostMessages) {
         args.emplace_back("can_post_messages", canPostMessages);
     }
-    if (canEditMessages) {
+    if(canEditMessages) {
         args.emplace_back("can_edit_messages", canEditMessages);
     }
-    if (canDeleteMessages) {
+    if(canDeleteMessages) {
         args.emplace_back("can_delete_messages", canDeleteMessages);
     }
-    if (canInviteUsers) {
+    if(canInviteUsers) {
         args.emplace_back("can_invite_users", canInviteUsers);
     }
-    if (canPinMessages) {
+    if(canPinMessages) {
         args.emplace_back("can_pin_messages", canPinMessages);
     }
-    if (canPromoteMembers) {
+    if(canPromoteMembers) {
         args.emplace_back("can_promote_members", canPromoteMembers);
     }
     return sendRequest("promoteChatMember", args).get<bool>("", false);
@@ -1060,7 +1060,7 @@ bool Api::pinChatMessage(std::int64_t chatId, std::int32_t messageId, bool disab
     args.reserve(3);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("message_id", messageId);
-    if (disableNotification) {
+    if(disableNotification) {
         args.emplace_back("disable_notification", disableNotification);
     }
     return sendRequest("pinChatMessage", args).get<bool>("", false);
@@ -1078,19 +1078,19 @@ Message::Ptr Api::setGameScore(std::int32_t userId, std::int32_t score, bool for
     args.reserve(7);
     args.emplace_back("user_id", userId);
     args.emplace_back("score", score);
-    if (force) {
+    if(force) {
         args.emplace_back("force", force);
     }
-    if (disableEditMessage) {
+    if(disableEditMessage) {
         args.emplace_back("disable_edit_message", disableEditMessage);
     }
-    if (chatId){
+    if(chatId){
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId){
+    if(messageId){
         args.emplace_back("message_id", messageId);
     }
-    if (!inlineMessageId.empty()){
+    if(!inlineMessageId.empty()){
         args.emplace_back("inline_message_id", inlineMessageId);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("setGameScore", args));
@@ -1101,19 +1101,19 @@ vector<GameHighScore::Ptr> Api::getGameHighScores(std::int32_t userId, std::int3
     args.reserve(7);
     args.emplace_back("user_id", userId);
     args.emplace_back("score", score);
-    if (force) {
+    if(force) {
         args.emplace_back("force", force);
     }
-    if (disableEditMessage) {
+    if(disableEditMessage) {
         args.emplace_back("disable_edit_message", disableEditMessage);
     }
-    if (chatId) {
+    if(chatId) {
         args.emplace_back("chat_id", chatId);
     }
-    if (messageId) {
+    if(messageId) {
         args.emplace_back("message_id", messageId);
     }
-    if (!inlineMessageId.empty()){
+    if(!inlineMessageId.empty()){
         args.emplace_back("inline_message_id", inlineMessageId);
     }
     return _tgTypeParser.parseJsonAndGetArray<GameHighScore>(&TgTypeParser::parseJsonAndGetGameHighScore, sendRequest("getGameHighScores", args));
@@ -1132,13 +1132,13 @@ Message::Ptr Api::sendPoll(std::int64_t chatId, const std::string& question, con
         return StringTools::urlEncode(option);
     }, options));
 
-    if (disableNotification){
+    if(disableNotification){
         args.emplace_back("disable_notification", disableNotification);
     }
-    if (replyToMessageId != 0){
+    if(replyToMessageId != 0){
         args.emplace_back("reply_to_message_id", replyToMessageId);
     }
-    if (replyMarkup){
+    if(replyMarkup){
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendPoll", args));
@@ -1149,7 +1149,7 @@ Poll::Ptr Api::stopPoll(std::int64_t chatId, std::int64_t messageId, const Inlin
     args.reserve(3);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("message_id", messageId);
-    if (replyMarkup){
+    if(replyMarkup){
         args.emplace_back("reply_markup", _tgTypeParser.parseGenericReply(replyMarkup));
     }
     return _tgTypeParser.parseJsonAndGetPoll(sendRequest("stopPoll", args));
@@ -1179,13 +1179,13 @@ ptree Api::sendRequest(const string& method, const vector<HttpReqArg>& args) con
     url += method;
 
     string serverResponse = _httpClient.makeRequest(url, args);
-    if (!serverResponse.compare(0, 6, "<html>")) {
+    if(!serverResponse.compare(0, 6, "<html>")) {
         throw TgException("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
     }
 
     ptree result = _tgTypeParser.parseJson(serverResponse);
     try {
-        if (result.get<bool>("ok", false)) {
+        if(result.get<bool>("ok", false)) {
             return result.get_child("result");
         } else {
             throw TgException(result.get("description", ""));

@@ -11,10 +11,10 @@ string base64_decode(const string &in)
     int val=0, valb=-8;
     for(u_char c : in)
     {
-        if (T[c] == -1) break;
+        if(T[c] == -1) break;
         val = (val<<6) + T[c];
         valb += 6;
-        if (valb>=0)
+        if(valb>=0)
         {
             out.push_back(char((val>>valb)&0xFF));
             valb-=8;

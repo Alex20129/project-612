@@ -93,10 +93,10 @@ char *jsonp_strndup(const char *str, size_t len);
 /* Windows compatibility */
 #if defined(_WIN32) || defined(WIN32)
 #  if defined(_MSC_VER)  /* MS compiller */
-#    if (_MSC_VER < 1900) && !defined(snprintf)  /* snprintf not defined yet & not introduced */
+#    if(_MSC_VER < 1900) && !defined(snprintf)  /* snprintf not defined yet & not introduced */
 #      define snprintf _snprintf
 #    endif
-#    if (_MSC_VER < 1500) && !defined(vsnprintf)  /* vsnprintf not defined yet & not introduced */
+#    if(_MSC_VER < 1500) && !defined(vsnprintf)  /* vsnprintf not defined yet & not introduced */
 #      define vsnprintf(b,c,f,a) _vsnprintf(b,c,f,a)
 #    endif
 #  else  /* Other Windows compiller, old definition */

@@ -73,7 +73,7 @@ int strbuffer_append_bytes(strbuffer_t *strbuff, const char *data, size_t size)
         char *new_value;
 
         /* avoid integer overflow */
-        if (strbuff->size > STRBUFFER_SIZE_MAX / STRBUFFER_FACTOR
+        if(strbuff->size > STRBUFFER_SIZE_MAX / STRBUFFER_FACTOR
             || size > STRBUFFER_SIZE_MAX - 1
             || strbuff->length > STRBUFFER_SIZE_MAX - 1 - size)
             return -1;

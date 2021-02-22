@@ -100,7 +100,7 @@ public:
 private:
     template<typename ListenerType, typename ObjectType>
     inline void broadcast(const std::vector<ListenerType>& listeners, const ObjectType object) const {
-        if (!object)
+        if(!object)
             return;
 
         for (const ListenerType& item : listeners) {
@@ -114,7 +114,7 @@ private:
 
     inline bool broadcastCommand(const std::string& command, const Message::Ptr& message) const {
         auto iter = _onCommandListeners.find(command);
-        if (iter == _onCommandListeners.end()) {
+        if(iter == _onCommandListeners.end()) {
             return false;
         }
         iter->second(message);

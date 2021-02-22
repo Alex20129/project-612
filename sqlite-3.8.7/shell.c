@@ -12,7 +12,7 @@
 ** This file contains code to implement the "sqlite" command line
 ** utility for accessing SQLite databases.
 */
-#if (defined(_WIN32) || defined(WIN32)) && !defined(_CRT_SECURE_NO_WARNINGS)
+#if(defined(_WIN32) || defined(WIN32)) && !defined(_CRT_SECURE_NO_WARNINGS)
 /* This needs to come before any includes for MSVC compiler */
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -163,7 +163,7 @@ static void endTimer(void){
 #define END_TIMER endTimer()
 #define HAS_TIMER 1
 
-#elif (defined(_WIN32) || defined(WIN32))
+#elif(defined(_WIN32) || defined(WIN32))
 
 #include <windows.h>
 
@@ -2491,7 +2491,7 @@ static int do_meta_command(char *zLine, ShellState *p){
       p->colWidth[5] = 13;                 /* P4 */
       p->colWidth[6] = 2;                  /* P5 */
       p->colWidth[7] = 13;                  /* Comment */
-    }else if (p->normalMode.valid) {
+    }else if(p->normalMode.valid) {
       p->normalMode.valid = 0;
       p->mode = p->normalMode.mode;
       p->showHeader = p->normalMode.showHeader;
@@ -2648,7 +2648,7 @@ static int do_meta_command(char *zLine, ShellState *p){
     }
     sqlite3_free(zSql);
     if( rc ){
-      if (pStmt) sqlite3_finalize(pStmt);
+      if(pStmt) sqlite3_finalize(pStmt);
       fprintf(stderr,"Error: %s\n", sqlite3_errmsg(db));
       xCloser(sCsv.in);
       return 1;
@@ -2675,7 +2675,7 @@ static int do_meta_command(char *zLine, ShellState *p){
     sqlite3_free(zSql);
     if( rc ){
       fprintf(stderr, "Error: %s\n", sqlite3_errmsg(db));
-      if (pStmt) sqlite3_finalize(pStmt);
+      if(pStmt) sqlite3_finalize(pStmt);
       xCloser(sCsv.in);
       return 1;
     }
@@ -3758,17 +3758,17 @@ static char *find_home_dir(void){
 #else
 
 #if defined(_WIN32) || defined(WIN32)
-  if (!home_dir) {
+  if(!home_dir) {
     home_dir = getenv("USERPROFILE");
   }
 #endif
 
-  if (!home_dir) {
+  if(!home_dir) {
     home_dir = getenv("HOME");
   }
 
 #if defined(_WIN32) || defined(WIN32)
-  if (!home_dir) {
+  if(!home_dir) {
     char *zDrive, *zPath;
     int n;
     zDrive = getenv("HOMEDRIVE");
@@ -3812,7 +3812,7 @@ static int process_sqliterc(
   FILE *in = NULL;
   int rc = 0;
 
-  if (sqliterc == NULL) {
+  if(sqliterc == NULL) {
     home_dir = find_home_dir();
     if( home_dir==0 ){
 #if !defined(__RTP__) && !defined(_WRS_KERNEL)

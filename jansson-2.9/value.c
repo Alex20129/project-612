@@ -54,7 +54,7 @@ json_t *json_object(void)
     if(!object)
         return NULL;
 
-    if (!hashtable_seed) {
+    if(!hashtable_seed) {
         /* Autoseed */
         json_object_seed(0);
     }
@@ -928,7 +928,7 @@ json_t *json_null(void)
 
 void json_delete(json_t *json)
 {
-    if (!json)
+    if(!json)
         return;
 
     switch(json_typeof(json)) {

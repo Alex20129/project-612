@@ -12,13 +12,13 @@ Chat::Ptr TgTypeParser::parseJsonAndGetChat(const ptree& data) const {
     auto result(make_shared<Chat>());
     result->id = data.get<int64_t>("id");
     string type = data.get<string>("type");
-    if (type == "private") {
+    if(type == "private") {
         result->type = Chat::Type::Private;
-    } else if (type == "group") {
+    } else if(type == "group") {
         result->type = Chat::Type::Group;
-    } else if (type == "supergroup") {
+    } else if(type == "supergroup") {
         result->type = Chat::Type::Supergroup;
-    } else if (type == "channel") {
+    } else if(type == "channel") {
         result->type = Chat::Type::Channel;
     }
     result->title = data.get("title", "");
@@ -37,19 +37,19 @@ Chat::Ptr TgTypeParser::parseJsonAndGetChat(const ptree& data) const {
 }
 
 string TgTypeParser::parseChat(const Chat::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
     result += '{';
     appendToJson(result, "id", object->id);
-    if (object->type == Chat::Type::Private) {
+    if(object->type == Chat::Type::Private) {
         appendToJson(result, "type", "private");
-    } else if (object->type == Chat::Type::Group) {
+    } else if(object->type == Chat::Type::Group) {
         appendToJson(result, "type", "group");
-    } else if (object->type == Chat::Type::Supergroup) {
+    } else if(object->type == Chat::Type::Supergroup) {
         appendToJson(result, "type", "supergroup");
-    } else if (object->type == Chat::Type::Channel) {
+    } else if(object->type == Chat::Type::Channel) {
         appendToJson(result, "type", "channel");
     }
     appendToJson(result, "title", object->title);
@@ -73,7 +73,7 @@ User::Ptr TgTypeParser::parseJsonAndGetUser(const ptree& data) const {
 }
 
 string TgTypeParser::parseUser(const User::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -100,7 +100,7 @@ MessageEntity::Ptr TgTypeParser::parseJsonAndGetMessageEntity(const ptree& data)
 }
 
 string TgTypeParser::parseMessageEntity(const MessageEntity::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -165,7 +165,7 @@ Message::Ptr TgTypeParser::parseJsonAndGetMessage(const ptree& data) const {
 }
 
 string TgTypeParser::parseMessage(const Message::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -226,7 +226,7 @@ PhotoSize::Ptr TgTypeParser::parseJsonAndGetPhotoSize(const ptree& data) const {
 }
 
 string TgTypeParser::parsePhotoSize(const PhotoSize::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -253,7 +253,7 @@ Audio::Ptr TgTypeParser::parseJsonAndGetAudio(const ptree& data) const {
 }
 
 string TgTypeParser::parseAudio(const Audio::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -279,7 +279,7 @@ Document::Ptr TgTypeParser::parseJsonAndGetDocument(const ptree& data) const {
 }
 
 string TgTypeParser::parseDocument(const Document::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -309,7 +309,7 @@ Sticker::Ptr TgTypeParser::parseJsonAndGetSticker(const ptree& data) const {
 }
 
 string TgTypeParser::parseSticker(const Sticker::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -337,7 +337,7 @@ StickerSet::Ptr TgTypeParser::parseJsonAndGetStickerSet(const ptree& data) const
 }
 
 string TgTypeParser::parseStickerSet(const StickerSet::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -362,7 +362,7 @@ MaskPosition::Ptr TgTypeParser::parseJsonAndGetMaskPosition(const ptree& data) c
 }
 
 string TgTypeParser::parseMaskPosition(const MaskPosition::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -386,7 +386,7 @@ Poll::Ptr TgTypeParser::parseJsonAndGetPoll(const ptree& data) const {
 }
 
 string TgTypeParser::parsePoll(const Poll::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -408,7 +408,7 @@ PollOption::Ptr TgTypeParser::parseJsonAndGetPollOption(const ptree& data) const
 }
 
 string TgTypeParser::parsePollOption(const PollOption::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -434,7 +434,7 @@ ChatPermissions::Ptr TgTypeParser::parseJsonAndGetChatPermissions(const ptree& d
 }
 
 string TgTypeParser::parseChatPermissions(const ChatPermissions::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -465,7 +465,7 @@ Video::Ptr TgTypeParser::parseJsonAndGetVideo(const ptree& data) const {
 }
 
 string TgTypeParser::parseVideo(const Video::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -492,7 +492,7 @@ Voice::Ptr TgTypeParser::parseJsonAndGetVoice(const ptree& data) const {
 }
 
 string TgTypeParser::parseVoice(const Voice::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -517,7 +517,7 @@ VideoNote::Ptr TgTypeParser::parseJsonAndGetVideoNote(const ptree& data) const {
 }
 
 string TgTypeParser::parseVideoNote(const VideoNote::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -544,7 +544,7 @@ Game::Ptr TgTypeParser::parseJsonAndGetGame(const ptree& data) const {
 }
 
 string TgTypeParser::parseGame(const Game::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -569,7 +569,7 @@ GameHighScore::Ptr TgTypeParser::parseJsonAndGetGameHighScore(const ptree& data)
 }
 
 string TgTypeParser::parseGameHighScore(const GameHighScore::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -593,7 +593,7 @@ Animation::Ptr TgTypeParser::parseJsonAndGetAnimation(const ptree& data) const {
 }
 
 string TgTypeParser::parseAnimation(const Animation::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -619,7 +619,7 @@ Contact::Ptr TgTypeParser::parseJsonAndGetContact(const ptree& data) const {
 }
 
 string TgTypeParser::parseContact(const Contact::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -642,7 +642,7 @@ Location::Ptr TgTypeParser::parseJsonAndGetLocation(const ptree& data) const {
 }
 
 string TgTypeParser::parseLocation(const Location::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -670,7 +670,7 @@ Update::Ptr TgTypeParser::parseJsonAndGetUpdate(const ptree& data) const {
 }
 
 string TgTypeParser::parseUpdate(const Update::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -698,7 +698,7 @@ UserProfilePhotos::Ptr TgTypeParser::parseJsonAndGetUserProfilePhotos(const ptre
 }
 
 string TgTypeParser::parseUserProfilePhotos(const UserProfilePhotos::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -712,7 +712,7 @@ string TgTypeParser::parseUserProfilePhotos(const UserProfilePhotos::Ptr& object
 
 InputMedia::Ptr TgTypeParser::parseJsonAndGetInputMedia(const ptree& data) const {
     string type = data.get("type", "");
-    if (type == "photo") {
+    if(type == "photo") {
         auto result(make_shared<InputMediaPhoto>());
         result->media = data.get("media", "");
         result->caption = data.get("caption", "");
@@ -720,7 +720,7 @@ InputMedia::Ptr TgTypeParser::parseJsonAndGetInputMedia(const ptree& data) const
         result->thumb = data.get("thumb", "");
         return result;
     }
-    else if (type == "video") {
+    else if(type == "video") {
         auto result(make_shared<InputMediaVideo>());
         result->media = data.get("media", "");
         result->caption = data.get("caption", "");
@@ -732,7 +732,7 @@ InputMedia::Ptr TgTypeParser::parseJsonAndGetInputMedia(const ptree& data) const
         result->supportsStreaming = data.get<bool>("supports_streaming", false);
         return result;
     }
-    else if (type == "animation") {
+    else if(type == "animation") {
         auto result(make_shared<InputMediaAnimation>());
         result->media = data.get("media", "");
         result->caption = data.get("caption", "");
@@ -742,14 +742,14 @@ InputMedia::Ptr TgTypeParser::parseJsonAndGetInputMedia(const ptree& data) const
         result->height = data.get<int32_t>("height", 0);
         result->duration = data.get<int32_t>("duration", 0);
         return result;
-    } else if (type == "document") {
+    } else if(type == "document") {
         auto result(make_shared<InputMediaDocument>());
         result->media = data.get("media", "");
         result->caption = data.get("caption", "");
         result->parseMode = data.get("parse_mode", "");
         result->thumb = data.get("thumb", "");
         return result;
-    } else if (type == "audio") {
+    } else if(type == "audio") {
         auto result(make_shared<InputMediaAudio>());
         result->media = data.get("media", "");
         result->caption = data.get("caption", "");
@@ -766,7 +766,7 @@ InputMedia::Ptr TgTypeParser::parseJsonAndGetInputMedia(const ptree& data) const
 }
 
 string TgTypeParser::parseInputMedia(const InputMedia::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -791,19 +791,19 @@ string TgTypeParser::parseInputMedia(const InputMedia::Ptr& object) const {
     appendToJson(result, "media", object->media);
     appendToJson(result, "caption", object->caption);
     appendToJson(result, "parse_mode", object->parseMode);
-    if (object->width) {
+    if(object->width) {
         appendToJson(result, "width", object->width);
     }
-    if (object->height) {
+    if(object->height) {
         appendToJson(result, "height", object->height);
     }
-    if (object->duration) {
+    if(object->duration) {
         appendToJson(result, "duration", object->duration);
     }
-    if (object->performer) {
+    if(object->performer) {
         appendToJson(result, "performer", object->performer);
     }
-    if (object->supportsStreaming) {
+    if(object->supportsStreaming) {
         appendToJson(result, "supports_streaming", object->supportsStreaming);
     }
     removeLastComma(result);
@@ -820,7 +820,7 @@ File::Ptr TgTypeParser::parseJsonAndGetFile(const boost::property_tree::ptree& d
 }
 
 string TgTypeParser::parseFile(const File::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -845,7 +845,7 @@ ReplyKeyboardMarkup::Ptr TgTypeParser::parseJsonAndGetReplyKeyboardMarkup(const 
 }
 
 std::string TgTypeParser::parseReplyKeyboardMarkup(const ReplyKeyboardMarkup::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -860,7 +860,7 @@ std::string TgTypeParser::parseReplyKeyboardMarkup(const ReplyKeyboardMarkup::Pt
         removeLastComma(result);
         result += "],";
     }
-    if (!object->keyboard.empty())
+    if(!object->keyboard.empty())
         removeLastComma(result);
     result += "],";
     appendToJson(result, "resize_keyboard", object->resizeKeyboard);
@@ -880,7 +880,7 @@ KeyboardButton::Ptr TgTypeParser::parseJsonAndGetKeyboardButton(const boost::pro
 }
 
 std::string TgTypeParser::parseKeyboardButton(const KeyboardButton::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -900,7 +900,7 @@ ReplyKeyboardRemove::Ptr TgTypeParser::parseJsonAndGetReplyKeyboardRemove(const 
 }
 
 std::string TgTypeParser::parseReplyKeyboardRemove(const ReplyKeyboardRemove::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -919,7 +919,7 @@ ForceReply::Ptr TgTypeParser::parseJsonAndGetForceReply(const boost::property_tr
 }
 
 std::string TgTypeParser::parseForceReply(const ForceReply::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -954,7 +954,7 @@ ChatMember::Ptr TgTypeParser::parseJsonAndGetChatMember(const boost::property_tr
 }
 
 std::string TgTypeParser::parseChatMember(const ChatMember::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -974,7 +974,7 @@ ChatPhoto::Ptr TgTypeParser::parseJsonAndGetChatPhoto(const boost::property_tree
 }
 
 std::string TgTypeParser::parseChatPhoto(const ChatPhoto::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -994,7 +994,7 @@ ResponseParameters::Ptr TgTypeParser::parseJsonAndGetResponseParameters(const bo
 }
 
 std::string TgTypeParser::parseResponseParameters(const ResponseParameters::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -1007,29 +1007,29 @@ std::string TgTypeParser::parseResponseParameters(const ResponseParameters::Ptr&
 }
 
 GenericReply::Ptr TgTypeParser::parseJsonAndGetGenericReply(const boost::property_tree::ptree& data) const {
-    if (data.find("force_reply") != data.not_found()) {
+    if(data.find("force_reply") != data.not_found()) {
         return static_pointer_cast<GenericReply>(parseJsonAndGetForceReply(data));
-    } else if (data.find("remove_keyboard") != data.not_found()) {
+    } else if(data.find("remove_keyboard") != data.not_found()) {
         return static_pointer_cast<GenericReply>(parseJsonAndGetReplyKeyboardRemove(data));
-    } else if (data.find("keyboard") != data.not_found()) {
+    } else if(data.find("keyboard") != data.not_found()) {
         return static_pointer_cast<GenericReply>(parseJsonAndGetReplyKeyboardMarkup(data));
-    } else if (data.find("inline_keyboard") != data.not_found()) {
+    } else if(data.find("inline_keyboard") != data.not_found()) {
         return static_pointer_cast<GenericReply>(parseJsonAndGetInlineKeyboardMarkup(data));
     }
     return make_shared<GenericReply>();
 }
 
 std::string TgTypeParser::parseGenericReply(const GenericReply::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
-    if (dynamic_pointer_cast<ForceReply>(object) != nullptr) {
+    if(dynamic_pointer_cast<ForceReply>(object) != nullptr) {
         return parseForceReply(static_pointer_cast<ForceReply>(object));
-    } else if (dynamic_pointer_cast<ReplyKeyboardRemove>(object) != nullptr) {
+    } else if(dynamic_pointer_cast<ReplyKeyboardRemove>(object) != nullptr) {
         return parseReplyKeyboardRemove(static_pointer_cast<ReplyKeyboardRemove>(object));
-    } else if (dynamic_pointer_cast<ReplyKeyboardMarkup>(object) != nullptr){
+    } else if(dynamic_pointer_cast<ReplyKeyboardMarkup>(object) != nullptr){
         return parseReplyKeyboardMarkup(static_pointer_cast<ReplyKeyboardMarkup>(object));
-    } else if (dynamic_pointer_cast<InlineKeyboardMarkup>(object) != nullptr){
+    } else if(dynamic_pointer_cast<InlineKeyboardMarkup>(object) != nullptr){
         return parseInlineKeyboardMarkup(static_pointer_cast<InlineKeyboardMarkup>(object));
     }
     return "";
@@ -1047,7 +1047,7 @@ InlineQuery::Ptr TgTypeParser::parseJsonAndGetInlineQuery(const boost::property_
 }
 
 std::string TgTypeParser::parseInlineQuery(const InlineQuery::Ptr& object) const{
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -1066,45 +1066,45 @@ InlineQueryResult::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult(const boos
     string type = data.get<string>("type");
     InlineQueryResult::Ptr result;
 
-    if (type == InlineQueryResultCachedAudio::TYPE) {
+    if(type == InlineQueryResultCachedAudio::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedAudio(data));
-    } else if (type == InlineQueryResultCachedDocument::TYPE) {
+    } else if(type == InlineQueryResultCachedDocument::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedDocument(data));
-    } else if (type == InlineQueryResultCachedGif::TYPE) {
+    } else if(type == InlineQueryResultCachedGif::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedGif(data));
-    } else if (type == InlineQueryResultCachedMpeg4Gif::TYPE) {
+    } else if(type == InlineQueryResultCachedMpeg4Gif::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedMpeg4Gif(data));
-    } else if (type == InlineQueryResultCachedPhoto::TYPE) {
+    } else if(type == InlineQueryResultCachedPhoto::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedPhoto(data));
-    } else if (type == InlineQueryResultCachedSticker::TYPE) {
+    } else if(type == InlineQueryResultCachedSticker::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedSticker(data));
-    } else if (type == InlineQueryResultCachedVideo::TYPE) {
+    } else if(type == InlineQueryResultCachedVideo::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedVideo(data));
-    } else if (type == InlineQueryResultCachedVoice::TYPE) {
+    } else if(type == InlineQueryResultCachedVoice::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultCachedVoice(data));
-    } else if (type == InlineQueryResultArticle::TYPE) {
+    } else if(type == InlineQueryResultArticle::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultArticle(data));
-    } else if (type == InlineQueryResultAudio::TYPE) {
+    } else if(type == InlineQueryResultAudio::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultAudio(data));
-    } else if (type == InlineQueryResultContact::TYPE) {
+    } else if(type == InlineQueryResultContact::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultContact(data));
-    } else if (type == InlineQueryResultGame::TYPE) {
+    } else if(type == InlineQueryResultGame::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultGame(data));
-    } else if (type == InlineQueryResultDocument::TYPE) {
+    } else if(type == InlineQueryResultDocument::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultDocument(data));
-    } else if (type == InlineQueryResultLocation::TYPE) {
+    } else if(type == InlineQueryResultLocation::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultLocation(data));
-    } else if (type == InlineQueryResultVenue::TYPE) {
+    } else if(type == InlineQueryResultVenue::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultVenue(data));
-    } else if (type == InlineQueryResultVoice::TYPE) {
+    } else if(type == InlineQueryResultVoice::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultVoice(data));
-    } else if (type == InlineQueryResultPhoto::TYPE) {
+    } else if(type == InlineQueryResultPhoto::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultPhoto(data));
-    } else if (type == InlineQueryResultGif::TYPE) {
+    } else if(type == InlineQueryResultGif::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultGif(data));
-    } else if (type == InlineQueryResultMpeg4Gif::TYPE) {
+    } else if(type == InlineQueryResultMpeg4Gif::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultMpeg4Gif(data));
-    } else if (type == InlineQueryResultVideo::TYPE) {
+    } else if(type == InlineQueryResultVideo::TYPE) {
         result = static_pointer_cast<InlineQueryResult>(parseJsonAndGetInlineQueryResultVideo(data));
     } else {
         result = make_shared<InlineQueryResult>();
@@ -1120,7 +1120,7 @@ InlineQueryResult::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult(const boos
 }
 
 std::string TgTypeParser::parseInlineQueryResult(const InlineQueryResult::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
 
@@ -1133,64 +1133,64 @@ std::string TgTypeParser::parseInlineQueryResult(const InlineQueryResult::Ptr& o
     appendToJson(result, "reply_markup", parseInlineKeyboardMarkup(object->replyMarkup));
     appendToJson(result, "input_message_content", parseInputMessageContent(object->inputMessageContent));
 
-    if (object->type == InlineQueryResultCachedAudio::TYPE) {
+    if(object->type == InlineQueryResultCachedAudio::TYPE) {
         result += parseInlineQueryResultCachedAudio(static_pointer_cast<InlineQueryResultCachedAudio>(object));
     }
-    else if (object->type == InlineQueryResultCachedDocument::TYPE) {
+    else if(object->type == InlineQueryResultCachedDocument::TYPE) {
         result += parseInlineQueryResultCachedDocument(static_pointer_cast<InlineQueryResultCachedDocument>(object));
     }
-    else if (object->type == InlineQueryResultCachedGif::TYPE) {
+    else if(object->type == InlineQueryResultCachedGif::TYPE) {
         result += parseInlineQueryResultCachedGif(static_pointer_cast<InlineQueryResultCachedGif>(object));
     }
-    else if (object->type == InlineQueryResultCachedMpeg4Gif::TYPE) {
+    else if(object->type == InlineQueryResultCachedMpeg4Gif::TYPE) {
         result += parseInlineQueryResultCachedMpeg4Gif(static_pointer_cast<InlineQueryResultCachedMpeg4Gif>(object));
     }
-    else if (object->type == InlineQueryResultCachedPhoto::TYPE) {
+    else if(object->type == InlineQueryResultCachedPhoto::TYPE) {
         result += parseInlineQueryResultCachedPhoto(static_pointer_cast<InlineQueryResultCachedPhoto>(object));
     }
-    else if (object->type == InlineQueryResultCachedSticker::TYPE) {
+    else if(object->type == InlineQueryResultCachedSticker::TYPE) {
         result += parseInlineQueryResultCachedSticker(static_pointer_cast<InlineQueryResultCachedSticker>(object));
     }
-    else if (object->type == InlineQueryResultCachedVideo::TYPE) {
+    else if(object->type == InlineQueryResultCachedVideo::TYPE) {
         result += parseInlineQueryResultCachedVideo(static_pointer_cast<InlineQueryResultCachedVideo>(object));
     }
-    else if (object->type == InlineQueryResultCachedVoice::TYPE) {
+    else if(object->type == InlineQueryResultCachedVoice::TYPE) {
         result += parseInlineQueryResultCachedVoice(static_pointer_cast<InlineQueryResultCachedVoice>(object));
     }
-    else if (object->type == InlineQueryResultArticle::TYPE) {
+    else if(object->type == InlineQueryResultArticle::TYPE) {
         result += parseInlineQueryResultArticle(static_pointer_cast<InlineQueryResultArticle>(object));
     }
-    else if (object->type == InlineQueryResultAudio::TYPE) {
+    else if(object->type == InlineQueryResultAudio::TYPE) {
         result += parseInlineQueryResultAudio(static_pointer_cast<InlineQueryResultAudio>(object));
     }
-    else if (object->type == InlineQueryResultContact::TYPE) {
+    else if(object->type == InlineQueryResultContact::TYPE) {
         result += parseInlineQueryResultContact(static_pointer_cast<InlineQueryResultContact>(object));
     }
-    else if (object->type == InlineQueryResultGame::TYPE) {
+    else if(object->type == InlineQueryResultGame::TYPE) {
         result += parseInlineQueryResultGame(static_pointer_cast<InlineQueryResultGame>(object));
     }
-    else if (object->type == InlineQueryResultDocument::TYPE) {
+    else if(object->type == InlineQueryResultDocument::TYPE) {
         result += parseInlineQueryResultDocument(static_pointer_cast<InlineQueryResultDocument>(object));
     }
-    else if (object->type == InlineQueryResultLocation::TYPE) {
+    else if(object->type == InlineQueryResultLocation::TYPE) {
         result += parseInlineQueryResultLocation(static_pointer_cast<InlineQueryResultLocation>(object));
     }
-    else if (object->type == InlineQueryResultVenue::TYPE) {
+    else if(object->type == InlineQueryResultVenue::TYPE) {
         result += parseInlineQueryResultVenue(static_pointer_cast<InlineQueryResultVenue>(object));
     }
-    else if (object->type == InlineQueryResultVoice::TYPE) {
+    else if(object->type == InlineQueryResultVoice::TYPE) {
         result += parseInlineQueryResultVoice(static_pointer_cast<InlineQueryResultVoice>(object));
     }
-    else if (object->type == InlineQueryResultPhoto::TYPE) {
+    else if(object->type == InlineQueryResultPhoto::TYPE) {
         result += parseInlineQueryResultPhoto(static_pointer_cast<InlineQueryResultPhoto>(object));
     }
-    else if (object->type == InlineQueryResultGif::TYPE) {
+    else if(object->type == InlineQueryResultGif::TYPE) {
         result += parseInlineQueryResultGif(static_pointer_cast<InlineQueryResultGif>(object));
     }
-    else if (object->type == InlineQueryResultMpeg4Gif::TYPE) {
+    else if(object->type == InlineQueryResultMpeg4Gif::TYPE) {
         result += parseInlineQueryResultMpeg4Gif(static_pointer_cast<InlineQueryResultMpeg4Gif>(object));
     }
-    else if (object->type == InlineQueryResultVideo::TYPE) {
+    else if(object->type == InlineQueryResultVideo::TYPE) {
         result += parseInlineQueryResultVideo(static_pointer_cast<InlineQueryResultVideo>(object));
     }
 
@@ -1207,7 +1207,7 @@ InlineQueryResultCachedAudio::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedAudio(const InlineQueryResultCachedAudio::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1227,7 +1227,7 @@ InlineQueryResultCachedDocument::Ptr TgTypeParser::parseJsonAndGetInlineQueryRes
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedDocument(const InlineQueryResultCachedDocument::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1248,7 +1248,7 @@ InlineQueryResultCachedGif::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultCa
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedGif(const InlineQueryResultCachedGif::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1268,7 +1268,7 @@ InlineQueryResultCachedMpeg4Gif::Ptr TgTypeParser::parseJsonAndGetInlineQueryRes
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedMpeg4Gif(const InlineQueryResultCachedMpeg4Gif::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1289,7 +1289,7 @@ InlineQueryResultCachedPhoto::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedPhoto(const InlineQueryResultCachedPhoto::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1310,7 +1310,7 @@ InlineQueryResultCachedSticker::Ptr TgTypeParser::parseJsonAndGetInlineQueryResu
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedSticker(const InlineQueryResultCachedSticker::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1330,7 +1330,7 @@ InlineQueryResultCachedVideo::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedVideo(const InlineQueryResultCachedVideo::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1351,7 +1351,7 @@ InlineQueryResultCachedVoice::Ptr TgTypeParser::parseJsonAndGetInlineQueryResult
 }
 
 std::string TgTypeParser::parseInlineQueryResultCachedVoice(const InlineQueryResultCachedVoice::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1375,7 +1375,7 @@ InlineQueryResultArticle::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultArti
 }
 
 std::string TgTypeParser::parseInlineQueryResultArticle(const InlineQueryResultArticle::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1401,7 +1401,7 @@ InlineQueryResultAudio::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultAudio(
 }
 
 std::string TgTypeParser::parseInlineQueryResultAudio(const InlineQueryResultAudio::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1429,7 +1429,7 @@ InlineQueryResultContact::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultCont
 }
 
 std::string TgTypeParser::parseInlineQueryResultContact(const InlineQueryResultContact::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1455,7 +1455,7 @@ InlineQueryResultGame::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultGame(co
 }
 
 std::string TgTypeParser::parseInlineQueryResultGame(const InlineQueryResultGame::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1479,7 +1479,7 @@ InlineQueryResultDocument::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultDoc
 }
 
 std::string TgTypeParser::parseInlineQueryResultDocument(const InlineQueryResultDocument::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1507,7 +1507,7 @@ InlineQueryResultLocation::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultLoc
 }
 
 std::string TgTypeParser::parseInlineQueryResultLocation(const InlineQueryResultLocation::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1538,7 +1538,7 @@ InlineQueryResultVenue::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultVenue(
 }
 
 std::string TgTypeParser::parseInlineQueryResultVenue(const InlineQueryResultVenue::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1565,7 +1565,7 @@ InlineQueryResultVoice::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultVoice(
 }
 
 std::string TgTypeParser::parseInlineQueryResultVoice(const InlineQueryResultVoice::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1589,7 +1589,7 @@ InlineQueryResultPhoto::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultPhoto(
 }
 
 std::string TgTypeParser::parseInlineQueryResultPhoto(const InlineQueryResultPhoto::Ptr& object) const{
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1615,7 +1615,7 @@ InlineQueryResultGif::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultGif(cons
     return result;
 }
 std::string TgTypeParser::parseInlineQueryResultGif(const InlineQueryResultGif::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1642,7 +1642,7 @@ InlineQueryResultMpeg4Gif::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultMpe
 }
 
 std::string TgTypeParser::parseInlineQueryResultMpeg4Gif(const InlineQueryResultMpeg4Gif::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1671,7 +1671,7 @@ InlineQueryResultVideo::Ptr TgTypeParser::parseJsonAndGetInlineQueryResultVideo(
 }
 
 std::string TgTypeParser::parseInlineQueryResultVideo(const InlineQueryResultVideo::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInlineQueryResult(), so I don't add
@@ -1699,7 +1699,7 @@ ChosenInlineResult::Ptr TgTypeParser::parseJsonAndGetChosenInlineResult(const bo
 }
 
 std::string TgTypeParser::parseChosenInlineResult(const ChosenInlineResult::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
 
@@ -1726,7 +1726,7 @@ CallbackQuery::Ptr TgTypeParser::parseJsonAndGetCallbackQuery(const boost::prope
 }
 
 std::string TgTypeParser::parseCallbackQuery(const CallbackQuery::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
 
@@ -1753,7 +1753,7 @@ InlineKeyboardMarkup::Ptr TgTypeParser::parseJsonAndGetInlineKeyboardMarkup(cons
 }
 
 std::string TgTypeParser::parseInlineKeyboardMarkup(const InlineKeyboardMarkup::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     string result;
@@ -1768,7 +1768,7 @@ std::string TgTypeParser::parseInlineKeyboardMarkup(const InlineKeyboardMarkup::
         removeLastComma(result);
         result += "],";
     }
-    if (!object->inlineKeyboard.empty())
+    if(!object->inlineKeyboard.empty())
         removeLastComma(result);
     result += "]}";
     return result;
@@ -1787,7 +1787,7 @@ InlineKeyboardButton::Ptr TgTypeParser::parseJsonAndGetInlineKeyboardButton(cons
     return result;
 }
 std::string TgTypeParser::parseInlineKeyboardButton(const InlineKeyboardButton::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     string result;
@@ -1821,7 +1821,7 @@ WebhookInfo::Ptr TgTypeParser::parseJsonAndGetWebhookInfo(const boost::property_
 }
 
 std::string TgTypeParser::parseWebhookInfo(const WebhookInfo::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -1851,13 +1851,13 @@ InputMessageContent::Ptr TgTypeParser::parseJsonAndGetInputMessageContent(const 
     string tTitle = data.get<string>("title", "");
     string tPnoneNumber = data.get<string>("phone_number", "");
 
-    if (!tMessageText.empty()) {
+    if(!tMessageText.empty()) {
         result = static_pointer_cast<InputMessageContent>(parseJsonAndGetInputTextMessageContent(data));
-    } else if (!tTitle.empty()) {
+    } else if(!tTitle.empty()) {
         result = static_pointer_cast<InputMessageContent>(parseJsonAndGetInputVenueMessageContent(data));
-    } else if (tLatitude != 1000) {
+    } else if(tLatitude != 1000) {
         result = static_pointer_cast<InputMessageContent>(parseJsonAndGetInputLocationMessageContent(data));
-    } else if (!tPnoneNumber.empty()) {
+    } else if(!tPnoneNumber.empty()) {
         result = static_pointer_cast<InputMessageContent>(parseJsonAndGetInputContactMessageContent(data));
     }
 
@@ -1865,23 +1865,23 @@ InputMessageContent::Ptr TgTypeParser::parseJsonAndGetInputMessageContent(const 
 }
 
 std::string TgTypeParser::parseInputMessageContent(const InputMessageContent::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
 
     string result;
     result += '{';
 
-    if (object->type == std::string("InputTextMessageContent")) {
+    if(object->type == std::string("InputTextMessageContent")) {
         result += parseInputTextMessageContent(static_pointer_cast<InputTextMessageContent>(object));
     }
-    else if (object->type == std::string("InputLocationMessageContent")) {
+    else if(object->type == std::string("InputLocationMessageContent")) {
         result += parseInputLocationMessageContent(static_pointer_cast<InputLocationMessageContent>(object));
     }
-    else if (object->type == std::string("InputVenueMessageContent")) {
+    else if(object->type == std::string("InputVenueMessageContent")) {
         result += parseInputVenueMessageContent(static_pointer_cast<InputVenueMessageContent>(object));
     }
-    else if (object->type == std::string("InputContactMessageContent")) {
+    else if(object->type == std::string("InputContactMessageContent")) {
         result += parseInputContactMessageContent(static_pointer_cast<InputContactMessageContent>(object));
     }
 
@@ -1900,7 +1900,7 @@ InputTextMessageContent::Ptr TgTypeParser::parseJsonAndGetInputTextMessageConten
 }
 
 std::string TgTypeParser::parseInputTextMessageContent(const InputTextMessageContent::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInputMessageContent()
@@ -1921,7 +1921,7 @@ InputLocationMessageContent::Ptr TgTypeParser::parseJsonAndGetInputLocationMessa
 }
 
 std::string TgTypeParser::parseInputLocationMessageContent(const InputLocationMessageContent::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInputMessageContent()
@@ -1945,7 +1945,7 @@ InputVenueMessageContent::Ptr TgTypeParser::parseJsonAndGetInputVenueMessageCont
 }
 
 std::string TgTypeParser::parseInputVenueMessageContent(const InputVenueMessageContent::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInputMessageContent()
@@ -1970,7 +1970,7 @@ InputContactMessageContent::Ptr TgTypeParser::parseJsonAndGetInputContactMessage
 }
 
 std::string TgTypeParser::parseInputContactMessageContent(const InputContactMessageContent::Ptr& object) const {
-    if (!object){
+    if(!object){
         return "";
     }
     // This function will be called by parseInputMessageContent()
@@ -1994,7 +1994,7 @@ Invoice::Ptr TgTypeParser::parseJsonAndGetInvoice(const boost::property_tree::pt
 }
 
 std::string TgTypeParser::parseInvoice(const Invoice::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     string result;
@@ -2053,21 +2053,21 @@ OrderInfo::Ptr TgTypeParser::parseJsonAndGetOrderInfo(const boost::property_tree
 }
 
 string TgTypeParser::parseOrderInfo(const OrderInfo::Ptr& object) const {
-    if (!object) {
+    if(!object) {
         return "";
     }
     std::string result;
     result += '{';
-    if (!object->name.empty()) {
+    if(!object->name.empty()) {
         appendToJson(result, "name", object->name);
     }
-    if (!object->phoneNumber.empty()) {
+    if(!object->phoneNumber.empty()) {
         appendToJson(result, "phone_number", object->phoneNumber);
     }
-    if (!object->email.empty()) {
+    if(!object->email.empty()) {
         appendToJson(result, "email", object->email);
     }
-    if (!object->shippingAddress) {
+    if(!object->shippingAddress) {
         result += R"("shipping_address":)";
         result += parseShippingAddress(object->shippingAddress);
         result += ",";
@@ -2115,7 +2115,7 @@ string TgTypeParser::parseShippingAddress(const ShippingAddress::Ptr& object) co
     std::string result;
     result += '{';
     appendToJson(result, "country_code", object->countryCode);
-    if (!object->state.empty()) {
+    if(!object->state.empty()) {
         appendToJson(result, "state", object->state);
     }
     appendToJson(result, "city", object->city);
@@ -2199,17 +2199,17 @@ std::string TgTypeParser::parseSuccessfulPayment(const SuccessfulPayment::Ptr& o
 
 
 void TgTypeParser::appendToJson(string& json, const string& varName, const string& value) const {
-    if (value.empty()) {
+    if(value.empty()) {
         return;
     }
     json += '"';
     json += varName;
     json += R"(":)";
-    if (value.front() != '{') {
+    if(value.front() != '{') {
         json += '"';
     }
     json += value;
-    if (value.back() != '}') {
+    if(value.back() != '}') {
         json += '"';
     }
     json += ',';

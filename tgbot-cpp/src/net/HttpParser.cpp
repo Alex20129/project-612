@@ -16,7 +16,7 @@ namespace TgBot {
 
 string HttpParser::generateRequest(const Url& url, const vector<HttpReqArg>& args, bool isKeepAlive) const {
     string result;
-    if (args.empty()) {
+    if(args.empty()) {
         result += "GET ";
     } else {
         result += "POST ";
@@ -27,19 +27,19 @@ string HttpParser::generateRequest(const Url& url, const vector<HttpReqArg>& arg
     result += "Host: ";
     result += url.host;
     result += "\r\nConnection: ";
-    if (isKeepAlive) {
+    if(isKeepAlive) {
         result += "keep-alive";
     } else {
         result += "close";
     }
     result += "\r\n";
-    if (args.empty()) {
+    if(args.empty()) {
         result += "\r\n";
     } else {
         string requestData;
 
         string bondary = generateMultipartBoundary(args);
-        if (bondary.empty()) {
+        if(bondary.empty()) {
             result += "Content-Type: application/x-www-form-urlencoded\r\n";
             requestData = generateWwwFormUrlencoded(args);
         } else {
@@ -64,11 +64,11 @@ string HttpParser::generateMultipartFormData(const vector<HttpReqArg>& args, con
         result += bondary;
         result += "\r\nContent-Disposition: form-data; name=\"";
         result += item.name;
-        if (item.isFile) {
+        if(item.isFile) {
             result += "\"; filename=\"" + item.fileName;
         }
         result += "\"\r\n";
-        if (item.isFile) {
+        if(item.isFile) {
             result += "Content-Type: ";
             result += item.mimeType;
             result += "\r\n";
@@ -84,7 +84,7 @@ string HttpParser::generateMultipartFormData(const vector<HttpReqArg>& args, con
 string HttpParser::generateMultipartBoundary(const vector<HttpReqArg>& args) const {
     string result;
     for (const HttpReqArg& item : args) {
-        if (item.isFile) {
+        if(item.isFile) {
             while (result.empty() || item.value.find(result) != string::npos) {
                 result += StringTools::generateRandomString(4);
             }
@@ -98,7 +98,7 @@ string HttpParser::generateWwwFormUrlencoded(const vector<HttpReqArg>& args) con
 
     bool firstRun = true;
     for (const HttpReqArg& item : args) {
-        if (firstRun) {
+        if(firstRun) {
             firstRun = false;
         } else {
             result += '&';
@@ -122,7 +122,7 @@ string HttpParser::generateResponse(const string& data, const string& mimeType, 
     result += "\r\nContent-Length: ";
     result += std::to_string(data.length());
     result += "\r\nConnection: ";
-    if (isKeepAlive) {
+    if(isKeepAlive) {
         result += "keep-alive";
     } else {
         result += "close";
@@ -142,8 +142,8 @@ unordered_map<string, string> HttpParser::parseHeader(const string& data, bool i
     while (lastLineEnd != lineEnd) {
         lastLineEnd = lineEnd;
         bool isFirstLine = lineEnd == 0;
-        if (isFirstLine) {
-            if (isRequest) {
+        if(isFirstLine) {
+            if(isRequest) {
                 lineSepPos = data.find(' ');
                 lineEnd = data.find("\r\n");
                 headers["_method"] = data.substr(0, lineSepPos);
@@ -158,7 +158,7 @@ unordered_map<string, string> HttpParser::parseHeader(const string& data, bool i
             lineStart += 2;
             lineEnd = data.find("\r\n", lineStart);
             lineSepPos = data.find(':', lineStart);
-            if (lastLineEnd == lineEnd || lineEnd == string::npos) {
+            if(lastLineEnd == lineEnd || lineEnd == string::npos) {
                 break;
             }
             headers[data.substr(lineStart, lineSepPos - lineStart)] = trim_copy(data.substr(lineSepPos + 1, lineEnd - lineSepPos - 1));
@@ -170,7 +170,7 @@ unordered_map<string, string> HttpParser::parseHeader(const string& data, bool i
 
 string HttpParser::extractBody(const string& data) const {
     std::size_t headerEnd = data.find("\r\n\r\n");
-    if (headerEnd == string::npos) {
+    if(headerEnd == string::npos) {
         return data;
     }
     headerEnd += 4;

@@ -32,7 +32,7 @@ public:
 
 private:
     std::string _handle(const std::string& data, const std::unordered_map<std::string, std::string>& headers) {
-        if (headers.at("_method") == "POST" && headers.at("_path") == _path) {
+        if(headers.at("_method") == "POST" && headers.at("_path") == _path) {
             _eventHandler.handleUpdate(_tgTypeParser.parseJsonAndGetUpdate(_tgTypeParser.parseJson(data)));
         }
         return HttpServer<Protocol>::_httpParser.generateResponse("", "text/plain", 200, "OK", false);

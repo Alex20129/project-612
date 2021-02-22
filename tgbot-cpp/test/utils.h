@@ -28,25 +28,25 @@ inline std::string diff(const T& test, const T& expected, std::string (*toString
     do {
         r1 = iter1 != end1;
         r2 = iter2 != end2;
-        if (r1) {
+        if(r1) {
             s1 = toStringFunc(*iter1++);
         }
-        if (r2) {
+        if(r2) {
             s2 = toStringFunc(*iter2++);
         }
-        if (r1 && r2 && s1 == s2) {
+        if(r1 && r2 && s1 == s2) {
             result += boost::lexical_cast<std::string>(i);
             result += " [=] ";
             result += s1;
             result += "\n";
         } else {
-            if (r1) {
+            if(r1) {
                 result += boost::lexical_cast<std::string>(i);
                 result += " [t] ";
                 result += s1;
                 result += "\n";
             }
-            if (r2) {
+            if(r2) {
                 result += boost::lexical_cast<std::string>(i);
                 result += " [e] ";
                 result += s2;
@@ -69,10 +69,10 @@ inline std::string diffS(const std::string& test, const std::string& expected) {
     do {
         r1 = std::getline(ss1, s1) ? true : false;
         r2 = std::getline(ss2, s2) ? true : false;
-        if (r1) {
+        if(r1) {
             v1.push_back(s1);
         }
-        if (r2) {
+        if(r2) {
             v2.push_back(s2);
         }
     } while (r1 || r2);
