@@ -27,11 +27,9 @@ string cp_datablob_to_string(DATA_BLOB inData)
 {
     string result("");
     unsigned long int i;
-    char ch;
     for(i=0; i<inData.cbData; i++)
     {
-        ch=inData.pbData[i];
-        result.append(1, ch);
+        result.append(1, inData.pbData[i]);
     }
     return result;
 }
@@ -71,10 +69,12 @@ string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
     if(memcmp(crData->pbData, "v10", 3)==0 ||
        memcmp(crData->pbData, "v11", 3)==0)
     {
+        cout<<"[v10]cookie!"<<endl;
         blobResult=DecryptWithKey(crData, key);
     }
     else
     {
+        cout<<"[old]cookie!"<<endl;
         blobResult=DPAPIDecrypt(crData);
     }
     if(blobResult.pbData!=nullptr)
@@ -95,8 +95,7 @@ string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
  */
 
 /*
- * Simple AES GCM test program, uses the same NIST data used for the FIPS
- * self test but uses the application level EVP APIs.
+ * Simple AES GCM test program
  */
 
 DATA_BLOB aes_gcm_encrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_pt)

@@ -158,7 +158,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
             for(i=0; encryptedCookie.pbData!=nullptr && i<encryptedCookie.cbData; i++)
             {
                 fprintf(stdout, "%.2x", encryptedCookie.pbData[i]&0xFF);
-                cooDataBuf.append(1, encryptedCookie.pbData[i]&0xFF);
+                cooDataBuf.append(1, encryptedCookie.pbData[i]);
             }
             fprintf(stdout, " < cookie bin data (%lu bytes)\n", i);
             newCookie.Value=string((char *)encryptedCookie.pbData);
