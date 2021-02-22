@@ -12,8 +12,8 @@ public:
     string Name;
     string Value;
     string Path;
-    string CreDate;
-    string ExpDate;
+    time_t CreDate;
+    time_t ExpDate;
 private:
 };
 
