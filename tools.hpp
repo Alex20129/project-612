@@ -18,6 +18,10 @@
 #elif defined(__linux__)
 #endif
 
+#define COOKIE_PREFIX_LENGTH  3
+#define AES_GCM_IV_LENGTH     12
+#define AES_GCM_TAG_LENGTH    16
+
 static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 using namespace std;
 
@@ -27,6 +31,6 @@ DATA_BLOB DecryptWithKey(DATA_BLOB *crData, unsigned char *key);
 DATA_BLOB DPAPIDecrypt(DATA_BLOB *crData);
 string EasyDecrypt(DATA_BLOB *crData, unsigned char *key);
 DATA_BLOB aes_gcm_encrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_pt);
-DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned char *gcm_tag);
+DATA_BLOB aes_gcm_decrypt(unsigned char *gcm_key, unsigned char *gcm_iv, unsigned char *gcm_ct, unsigned int gcm_ct_len, unsigned char *gcm_tag);
 
 #endif //TOOLS_HPP

