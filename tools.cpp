@@ -67,12 +67,10 @@ string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
     if(memcmp(crData->pbData, "v10", 3)==0 ||
        memcmp(crData->pbData, "v11", 3)==0)
     {
-        cout<<"[v10]cookie!"<<endl;
         blobResult=DecryptWithKey(crData, key);
     }
     else
     {
-        cout<<"[old]cookie!"<<endl;
         blobResult=DPAPIDecrypt(crData);
     }
     if(blobResult.pbData!=nullptr)

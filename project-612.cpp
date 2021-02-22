@@ -27,8 +27,9 @@ int main()
 
         for(unsigned long int i=0; i<chrProc1.Cookies->size(); i++)
         {
-            cout<<chrProc1.Cookies->at(i).Host<<"|";
-            cout<<chrProc1.Cookies->at(i).Path<<"|";
+            cout<<chrProc1.Cookies->at(i).Host<<" | ";
+            cout<<chrProc1.Cookies->at(i).Name<<" | ";
+            cout<<chrProc1.Cookies->at(i).Path<<" | ";
             cout<<chrProc1.Cookies->at(i).Value<<"\n";
         }
 

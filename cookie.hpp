@@ -8,10 +8,12 @@ using namespace std;
 class Cookie
 {
 public:
-    string ExpDate;
+    string Host;
+    string Name;
     string Value;
     string Path;
-    string Host;
+    string CreDate;
+    string ExpDate;
 private:
 };
 

