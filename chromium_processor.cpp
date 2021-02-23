@@ -83,16 +83,6 @@ int ChromiumProcessor::ExtractChromiumPasswords()
             fprintf(stdout, "%.2x", encryptedPass.pbData[i]&0xFF);
         }
         fprintf(stdout, " < encryptedPass\n");
-
-        //CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
-
-        for(i=0; decryptedPass.pbData && i<decryptedPass.cbData; i++)
-        {
-            fprintf(stdout, "%.2x", decryptedPass.pbData[i]&0xFF);
-        }
-        if(i)
-        {
-        }
         fprintf(stdout, "%s < decryptedPass!\n", newPW.c_str());
 
         delete [] encryptedPass.pbData;
