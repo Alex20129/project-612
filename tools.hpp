@@ -23,6 +23,10 @@ struct DATA_BLOB
 {
     unsigned char *pbData;
     u_int64_t cbData;
+    DATA_BLOB()
+    {
+        pbData=nullptr;
+    };
 };
 #endif
 
