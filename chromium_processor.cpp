@@ -43,7 +43,7 @@ int ChromiumProcessor::ExtractChromiumPasswords()
         return -2;
     }
 
-    if(MasterKey==nullptr)
+    if(!MasterKey)
     {
         this->ExtractChromiumMasterKey();
     }
@@ -71,7 +71,6 @@ int ChromiumProcessor::ExtractChromiumPasswords()
 
         DATA_BLOB encryptedPass, decryptedPass;
         decryptedPass.pbData=nullptr;
-
         encryptedPass.cbData=sqlite3_column_bytes(pStmt, 3);
         encryptedPass.pbData=new unsigned char[encryptedPass.cbData];
 
@@ -79,12 +78,11 @@ int ChromiumProcessor::ExtractChromiumPasswords()
 
         newPW=EasyDecrypt(&encryptedPass, MasterKey);
 
-        for(i=0; encryptedPass.pbData!=nullptr && i<encryptedPass.cbData; i++)
+        for(i=0; encryptedPass.pbData && i<encryptedPass.cbData; i++)
         {
             fprintf(stdout, "%.2x", encryptedPass.pbData[i]&0xFF);
         }
-        fprintf(stdout, "<encryptedPass\n");
-        fprintf(stdout, "%s < encryptedPass\n", encryptedPass.pbData);
+        fprintf(stdout, " < encryptedPass\n");
 
         //CryptUnprotectData(&encryptedPass, NULL, NULL, NULL, NULL, 0, &decryptedPass);
 
@@ -95,7 +93,7 @@ int ChromiumProcessor::ExtractChromiumPasswords()
         if(i)
         {
         }
-        fprintf(stdout, "\n%s < decryptedPass!\n", newPW.c_str());
+        fprintf(stdout, "%s < decryptedPass!\n", newPW.c_str());
 
         delete [] encryptedPass.pbData;
         if(decryptedPass.pbData)
@@ -131,7 +129,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
         return -2;
     }
 
-    if(MasterKey==nullptr)
+    if(!MasterKey)
     {
         this->ExtractChromiumMasterKey();
     }
@@ -236,12 +234,6 @@ unsigned char *ChromiumProcessor::ExtractChromiumMasterKey()
     }
 
     stMasterKey=base64_decode(stMasterKey);
-    fprintf(stdout, "Chromium MasterKey: '");
-    for(unsigned long long int i=0; i<stMasterKey.length(); i++)
-    {
-        fprintf(stdout, "%.2x", stMasterKey.data()[i]&0xFF);
-    }
-    fprintf(stdout, "' (hex format, encrypted)\n");
 
     unsigned int keyLen=stMasterKey.length()-5;
     DATA_BLOB bRawMasterKey;
