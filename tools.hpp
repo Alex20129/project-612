@@ -26,7 +26,7 @@ struct DATA_BLOB
     DATA_BLOB()
     {
         pbData=nullptr;
-    };
+    }
 };
 #endif
 

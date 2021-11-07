@@ -84,7 +84,6 @@ string EasyDecrypt(DATA_BLOB *crData, unsigned char *key)
             LocalFree(blobResult.pbData);
         }
     }
-
     return result;
 }
 

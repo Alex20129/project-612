@@ -2,7 +2,7 @@
 #define SENDER_HPP
 
 #include <string>
-#include <tgbot/tgbot.h>
+#include "tgbot/tgbot.h"
 
 using namespace std;
 using namespace TgBot;
