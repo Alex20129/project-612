@@ -1,5 +1,7 @@
 #include "tools.hpp"
 
+using namespace std;
+
 string base64_decode(const string &in)
 {
     string out;

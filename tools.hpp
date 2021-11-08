@@ -12,8 +12,6 @@
 #include "jansson.h"
 #include "sqlite3.h"
 
-using namespace std;
-
 #if defined(__WIN64__)
     #include <windows.h>
     #include <Wincrypt.h>
