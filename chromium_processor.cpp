@@ -38,7 +38,7 @@ int ChromiumProcessor::ExtractChromiumPasswords()
     }
     else
     {
-        cerr<<"File don't exists"<<pass_path<<endl;
+        cerr<<"File don't exists "<<pass_path<<endl;
         throw invalid_argument("wrong pass_path");
         return -2;
     }
@@ -114,7 +114,7 @@ int ChromiumProcessor::ExtractChromiumCookies()
     }
     else
     {
-        cerr<<"File don't exists"<<cookies_path<<endl;
+        cerr<<"File don't exists "<<cookies_path<<endl;
         throw invalid_argument("wrong cookies_path");
         return -2;
     }
